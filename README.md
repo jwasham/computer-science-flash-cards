@@ -1,6 +1,6 @@
 # Computer Science Flash Cards
 
-This is a little website I've put together to allow me to easily make flash cards for memorization of:
+This is a little website I've put together to allow me to easily make flash cards and quiz myself for memorization of:
 
 - general cs knowledge
     - vocabulary
@@ -13,8 +13,11 @@ This is a little website I've put together to allow me to easily make flash card
     - solving problems
     - bitwise operations
 
-It uses:
+Will be able to use it on:
+    - desktop
+    - mobile (phone and tablet)
 
+It uses:
 - Python 3
 - Flask
 - other things I need to figure out
