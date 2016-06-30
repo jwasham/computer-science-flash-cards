@@ -1,3 +1,4 @@
 .idea/
 py3env/
+__pycache__/
 
