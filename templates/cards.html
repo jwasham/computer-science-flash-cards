@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block body %}
+    {% if session.logged_in %}
+        <form action="{{ url_for('add_card') }}" method=post class=add-card>
+            <dl>
+                <dt>
+                    <label for="type">Type:</label>
+                </dt>
+                <dd>
+                    <select name="type">
+                        <option value="1">General</option>
+                        <option value="2">Code</option>
+                    </select>
+                </dd>
+                <dt>
+                    <label for="front">Front:</label>
+                </dt>
+                <dd><input type="text" size=30 name="front" /></dd>
+                <dt>
+                    <label for="back">Back:</label>
+                </dt>
+                <dd><textarea name="back" rows="15" cols="60"></textarea></dd>
+                <dd><input type="submit" value="Save" /></dd>
+            </dl>
+        </form>
+    {% endif %}
+    <hr />
+    <ul class=cards>
+        {% for card in cards %}
+            <li>
+                <h3>{{ card.front }}</h3>
+                {% if card.type == 1 %}
+                    {{ card.back|replace("\n", "<br />") }}
+                {% else %}
+                    <pre><code>{{ card.back|safe }}</code></pre>
+                {% endif %}
+                <hr>
+            </li>
+        {% else %}
+            <li><em>Unbelievable. No cards here so far.</em>
+        {% endfor %}
+    </ul>
+{% endblock %}

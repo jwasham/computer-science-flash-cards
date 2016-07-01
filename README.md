@@ -21,3 +21,32 @@ It uses:
 - Python 3
 - Flask
 - other things I need to figure out
+
+---
+
+To Do:
+
+- [ ] Log in
+    - [ ] Auth
+    - [ ] Auth errors
+    - [ ] Session set
+    - [ ] Logout
+- [ ] Admin Area
+    - [ ] Admin welcome
+    - [ ] Vocab
+        - [ ] List cards by type
+        - [ ] Add cards
+        - [ ] Edit card
+        - [ ] Delete card
+    - [ ] Code
+        - [ ] List cards by type
+        - [ ] Add cards
+        - [ ] Edit card
+        - [ ] Delete card
+- Card Memorization
+    - [ ] Card type toggle
+    - [ ] Show card
+    - [ ] Flip card
+    - [ ] Next card
+    - [ ] Last card
+    - [ ] Mark as known
