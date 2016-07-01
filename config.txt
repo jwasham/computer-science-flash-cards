@@ -1,0 +1,3 @@
+SECRET_KEY='some very long key here'
+USERNAME='username-here'
+PASSWORD='password-here'

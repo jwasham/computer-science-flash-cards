@@ -26,23 +26,16 @@ It uses:
 
 To Do:
 
-- [ ] Log in
-    - [ ] Auth
-    - [ ] Auth errors
-    - [ ] Session set
-    - [ ] Logout
-- [ ] Admin Area
-    - [ ] Admin welcome
-    - [ ] Vocab
-        - [ ] List cards by type
-        - [ ] Add cards
-        - [ ] Edit card
-        - [ ] Delete card
-    - [ ] Code
-        - [ ] List cards by type
-        - [ ] Add cards
-        - [ ] Edit card
-        - [ ] Delete card
+- [x] Log in
+    - [x] Auth
+    - [x] Auth errors
+    - [x] Session set
+    - [x] Logout
+- [ ] Card Area
+    - [x] List cards
+    - [x] Add cards
+    - [ ] Edit card
+    - [ ] Delete card
 - Card Memorization
     - [ ] Card type toggle
     - [ ] Show card

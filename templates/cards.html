@@ -1,10 +1,10 @@
 {% extends "layout.html" %}
 {% block body %}
-    {% if session.logged_in %}
-        <form action="{{ url_for('add_card') }}" method=post class=add-card>
 
+    <div class="well">
+        <h2>Add a Card</h2>
+        <form action="{{ url_for('add_card') }}" method=post class=add-card>
             <div class="form-group">
-                <label for="type">Type</label>
                 <label for="general" class="toggleButton btn btn-default btn-lg">General &nbsp;
                     <input type="radio" name="type" value="1" id="general"/>
                 </label>
@@ -28,9 +28,7 @@
                 <button type="submit" class="saveButton btn btn-lg btn-primary">Save</button>
             </div>
         </form>
-    {% endif %}
-
-    <hr/>
+    </div>
 
     <div class="page-header">
       <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
