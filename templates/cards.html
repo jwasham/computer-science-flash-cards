@@ -2,42 +2,85 @@
 {% block body %}
     {% if session.logged_in %}
         <form action="{{ url_for('add_card') }}" method=post class=add-card>
-            <dl>
-                <dt>
-                    <label for="type">Type:</label>
-                </dt>
-                <dd>
-                    <select name="type">
-                        <option value="1">General</option>
-                        <option value="2">Code</option>
-                    </select>
-                </dd>
-                <dt>
-                    <label for="front">Front:</label>
-                </dt>
-                <dd><input type="text" size=30 name="front" /></dd>
-                <dt>
-                    <label for="back">Back:</label>
-                </dt>
-                <dd><textarea name="back" rows="15" cols="60"></textarea></dd>
-                <dd><input type="submit" value="Save" /></dd>
-            </dl>
+
+            <div class="form-group">
+                <label for="type">Type</label>
+                <label for="general" class="toggleButton btn btn-default btn-lg">General &nbsp;
+                    <input type="radio" name="type" value="1" id="general"/>
+                </label>
+                <label for="code" class="toggleButton btn btn-default btn-lg">Code &nbsp;
+                    <input type="radio" name="type" value="2" id="code"/>
+                </label>
+            </div>
+            <div class="form-group fieldFront">
+                <label for="front">Front of Card</label>
+                <input type="text" name="front" class="form-control">
+            </div>
+            <div class="form-group fieldBack">
+                <label for="back">Back of Card</label>
+                <textarea name="back"
+                          class="form-control"
+                          id="back"
+                          placeholder="back of card"
+                          rows="12"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="saveButton btn btn-lg btn-primary">Save</button>
+            </div>
         </form>
     {% endif %}
-    <hr />
-    <ul class=cards>
-        {% for card in cards %}
-            <li>
-                <h3>{{ card.front }}</h3>
-                {% if card.type == 1 %}
-                    {{ card.back|replace("\n", "<br />") }}
-                {% else %}
-                    <pre><code>{{ card.back|safe }}</code></pre>
-                {% endif %}
-                <hr>
-            </li>
-        {% else %}
-            <li><em>Unbelievable. No cards here so far.</em>
-        {% endfor %}
-    </ul>
+
+    <hr/>
+
+    <div class="page-header">
+      <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
+    </div>
+
+    {% for card in cards %}
+        <div>
+            <h3>{{ card.front }}</h3>
+            {% if card.type == 1 %}
+                {{ card.back|replace("\n", "<br />") }}
+            {% else %}
+                <pre>{{ card.back|safe }}</pre>
+            {% endif %}
+            <hr>
+        </div>
+    {% else %}
+        <li><em>Unbelievable. No cards here so far.</em>
+    {% endfor %}
+
+    <script type=text/javascript>
+
+        $(document).ready(function () {
+            function checkit() {
+                var checkedVal = $('input[name=type]:checked').val();
+                if (checkedVal === undefined) {
+                    // hide the fields
+                    $('.fieldFront').hide();
+                    $('.fieldBack').hide();
+                    $('.saveButton').hide();
+                } else {
+                    $('.toggleButton').removeClass('toggleSelected');
+                    $(this).addClass('toggleSelected');
+
+                    if (checkedVal == '1') {
+                        $('textarea[name=back]').attr('rows', 5);
+                    } else {
+                        $('textarea[name=back]').attr('rows', 12);
+                    }
+
+                    $('.fieldFront').show();
+                    $('.fieldBack').show();
+                    $('.saveButton').show();
+                }
+            }
+
+            $('.toggleButton').click(checkit);
+
+            checkit();
+        });
+
+    </script>
+
 {% endblock %}

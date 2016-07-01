@@ -62,6 +62,8 @@ def index():
 
 @app.route('/cards')
 def cards():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     db = get_db()
     cur = db.execute('SELECT type, front, back, known FROM cards ORDER BY id DESC')
     cards = cur.fetchall()
@@ -71,7 +73,7 @@ def cards():
 @app.route('/add', methods=['POST'])
 def add_card():
     if not session.get('logged_in'):
-        abort(401)
+        return redirect(url_for('login'))
     db = get_db()
     db.execute('INSERT INTO cards (type, front, back) VALUES (?, ?, ?)',
                [request.form['type'],
@@ -83,13 +85,24 @@ def add_card():
     return redirect(url_for('cards'))
 
 
+@app.route('/general')
+def general():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('general.html')
+
+
+@app.route('/code')
+def code():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('code.html')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-        # return request.form['username'] + " / " + app.config['USERNAME'] + " / " \
-        #      + request.form['password'] + " / " + app.config['PASSWORD']
-
         if request.form['username'] != app.config['USERNAME']:
             error = 'Invalid username'
         elif request.form['password'] != app.config['PASSWORD']:
