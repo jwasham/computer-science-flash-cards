@@ -65,7 +65,7 @@ def cards():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
-    cur = db.execute('SELECT type, front, back, known FROM cards ORDER BY id DESC')
+    cur = db.execute('SELECT id, type, front, back, known FROM cards ORDER BY id DESC')
     cards = cur.fetchall()
     return render_template('cards.html', cards=cards)
 
@@ -82,6 +82,35 @@ def add_card():
                 ])
     db.commit()
     flash('New card was successfully added.')
+    return redirect(url_for('cards'))
+
+
+@app.route('/edit/<card_id>')
+def edit(card_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    cur = db.execute('SELECT * FROM cards WHERE id = ?', [card_id])
+    card = cur.fetchone()
+    return render_template('edit.html', card=card)
+
+
+@app.route('/edit_card', methods=['POST'])
+def edit_card():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    selected = request.form.getlist('known')
+    known = bool(selected)
+    db = get_db()
+    db.execute('UPDATE cards set type = ?, front = ?, back = ?, known = ? where id = ?',
+               [request.form['type'],
+                request.form['front'],
+                request.form['back'],
+                known,
+                request.form['card_id']
+                ])
+    db.commit()
+    flash('Card successfully edited.')
     return redirect(url_for('cards'))
 
 

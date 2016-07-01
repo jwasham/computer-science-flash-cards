@@ -34,7 +34,7 @@ To Do:
 - [ ] Card Area
     - [x] List cards
     - [x] Add cards
-    - [ ] Edit card
+    - [x] Edit card
     - [ ] Delete card
 - Card Memorization
     - [ ] Card type toggle

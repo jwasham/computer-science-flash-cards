@@ -2,3 +2,7 @@
     background-color: #62b06b;
     color: #ffffff;
 }
+
+textarea {
+    font-family: monospace;
+}

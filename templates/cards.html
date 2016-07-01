@@ -3,7 +3,7 @@
 
     <div class="well">
         <h2>Add a Card</h2>
-        <form action="{{ url_for('add_card') }}" method=post class=add-card>
+        <form action="{{ url_for('add_card') }}" method=post>
             <div class="form-group">
                 <label for="general" class="toggleButton btn btn-default btn-lg">General &nbsp;
                     <input type="radio" name="type" value="1" id="general"/>
@@ -36,7 +36,10 @@
 
     {% for card in cards %}
         <div>
-            <h3>{{ card.front }}</h3>
+            <h3>
+                <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                {{ card.front }}
+            </h3>
             {% if card.type == 1 %}
                 {{ card.back|replace("\n", "<br />") }}
             {% else %}
