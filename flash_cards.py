@@ -110,7 +110,18 @@ def edit_card():
                 request.form['card_id']
                 ])
     db.commit()
-    flash('Card successfully edited.')
+    flash('Card saved.')
+    return redirect(url_for('cards'))
+
+
+@app.route('/delete/<card_id>')
+def delete(card_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('DELETE FROM cards WHERE id = ?', [card_id])
+    db.commit()
+    flash('Card deleted.')
     return redirect(url_for('cards'))
 
 

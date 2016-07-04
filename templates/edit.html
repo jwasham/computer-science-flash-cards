@@ -25,12 +25,23 @@
                           placeholder="back of card"
                           rows="12">{{ card.back|e }}</textarea>
             </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="known"
-                       value="1" {{ "checked" if (card.known == 1) else "" }} /> Known
-                </label>
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="known"
+                               value="1" {{ "checked" if (card.known == 1) else "" }} /> Known
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <a href="{{ url_for('delete', card_id=card.id) }}" class="btn btn-danger btn-xs">
+                        <i class="fa fa-trash"></i>
+                        Remove
+                    </a>
+                </div>
             </div>
+
             <hr />
             <div class="form-group">
                 <input type="hidden" name="card_id" value="{{ card.id|e }}" />
