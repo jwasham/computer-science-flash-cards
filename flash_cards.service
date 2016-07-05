@@ -1,0 +1,14 @@
+[Unit]
+Description=uWSGI instance to serve flash_cards
+After=network.target
+
+[Service]
+User=john
+Group=www-data
+WorkingDirectory=/var/www/cs_flash_cards
+Environment="PATH=/var/www/cs_flash_cards/py3env/bin"
+Environment="CARDS_SETTINGS=/var/www/cs_flash_cards/config-personal.txt"
+ExecStart=/var/www/cs_flash_cards/py3env/bin/uwsgi --ini flash_cards.ini
+
+[Install]
+WantedBy=multi-user.target
