@@ -33,6 +33,7 @@ It uses:
     https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-16-04
     - `wsgy.py` is the entry point. It calls `flash_cards.py`
     - This is my systemd file `/etc/systemd/system/flash_cards.service`: [view](flash_cards.service)
+        - you can see the paths where I installed it, and the name of my virtualenv directory
     - when done with tutorial:
     ```
     sudo systemctl restart flash_cards
