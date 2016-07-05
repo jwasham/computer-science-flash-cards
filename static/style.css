@@ -6,3 +6,45 @@
 textarea {
     font-family: monospace;
 }
+
+.cardContent h4 {
+    margin-top: 0;
+}
+
+.alignContainer {
+    display: table;
+    width: 100%;
+}
+
+.alignMiddle {
+    height: 20em;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.cardBack {
+    display: none;
+}
+
+.largerText {
+    font-size: 2em;
+}
+
+
+/* disables collapsing header menu */
+
+.navbar-collapse.collapse {
+  display: block!important;
+}
+
+.navbar-nav>li, .navbar-nav {
+  float: left !important;
+}
+
+.navbar-nav.navbar-right:last-child {
+  margin-right: 0 !important;
+}
+
+.navbar-right {
+  float: right!important;
+}

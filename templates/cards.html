@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <div class="well">
+    <div class="well editPanel">
         <h2>Add a Card</h2>
-        <form action="{{ url_for('add_card') }}" method=post>
+        <form action="{{ url_for('add_card') }}" method="post" class="cardForm">
             <div class="form-group">
                 <label for="general" class="toggleButton btn btn-default btn-lg">General &nbsp;
                     <input type="radio" name="type" value="1" id="general"/>
@@ -14,7 +14,7 @@
             </div>
             <div class="form-group fieldFront">
                 <label for="front">Front of Card</label>
-                <input type="text" name="front" class="form-control">
+                <input type="text" name="front" id="front" class="form-control">
             </div>
             <div class="form-group fieldBack">
                 <label for="back">Back of Card</label>
@@ -31,57 +31,46 @@
     </div>
 
     <div class="page-header">
-      <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
+        <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
+    </div>
+    <div class="btn-group btn-group-md" role="group" aria-label="filters">
+        <a href="{{ url_for('filter_cards', filter_name="all") }}" class="btn btn-{{ "primary" if filter_name == "all" else "default" }}">All</a>
+        <a href="{{ url_for('filter_cards', filter_name="general") }}" class="btn btn-{{ "primary" if filter_name == "general" else "default" }}">General</a>
+        <a href="{{ url_for('filter_cards', filter_name="code") }}" class="btn btn-{{ "primary" if filter_name == "code" else "default" }}">Code</a>
+        <a href="{{ url_for('filter_cards', filter_name="known") }}" class="btn btn-{{ "primary" if filter_name == "known" else "default" }}">Known</a>
+        <a href="{{ url_for('filter_cards', filter_name="unknown") }}" class="btn btn-{{ "primary" if filter_name == "unknown" else "default" }}">Unknown</a>
     </div>
 
-    {% for card in cards %}
-        <div>
-            <h3>
-                <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                {{ card.front }}
-            </h3>
-            {% if card.type == 1 %}
-                {{ card.back|replace("\n", "<br />")|safe }}
-            {% else %}
-                <pre>{{ card.back|safe }}</pre>
-            {% endif %}
-            <hr>
-        </div>
-    {% else %}
-        <li><em>Unbelievable. No cards here so far.</em>
-    {% endfor %}
+    <br />
+    <br />
 
-    <script type=text/javascript>
+    <table class="table table-bordered">
+        {% for card in cards %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </td>
+                <td class="cardContent">
+                    <h4>
+                        {{ card.front }}
+                    </h4>
+                    {% if card.type == 1 %}
+                        {{ card.back|replace("\n", "<br />")|safe }}
+                    {% else %}
+                        <pre>{{ card.back|safe }}</pre>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>
+                    <em>No cards to show.</em>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 
-        $(document).ready(function () {
-            function checkit() {
-                var checkedVal = $('input[name=type]:checked').val();
-                if (checkedVal === undefined) {
-                    // hide the fields
-                    $('.fieldFront').hide();
-                    $('.fieldBack').hide();
-                    $('.saveButton').hide();
-                } else {
-                    $('.toggleButton').removeClass('toggleSelected');
-                    $(this).addClass('toggleSelected');
 
-                    if (checkedVal == '1') {
-                        $('textarea[name=back]').attr('rows', 5);
-                    } else {
-                        $('textarea[name=back]').attr('rows', 12);
-                    }
 
-                    $('.fieldFront').show();
-                    $('.fieldBack').show();
-                    $('.saveButton').show();
-                }
-            }
-
-            $('.toggleButton').click(checkit);
-
-            checkit();
-        });
-
-    </script>
 
 {% endblock %}

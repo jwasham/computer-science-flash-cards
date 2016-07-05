@@ -31,15 +31,14 @@ To Do:
     - [x] Auth errors
     - [x] Session set
     - [x] Logout
-- [ ] Card Area
+- [x] Card Area
     - [x] List cards
     - [x] Add cards
     - [x] Edit card
-    - [ ] Delete card
+    - [x] Delete card
 - Card Memorization
-    - [ ] Card type toggle
-    - [ ] Show card
-    - [ ] Flip card
-    - [ ] Next card
-    - [ ] Last card
-    - [ ] Mark as known
+    - [x] Card type toggle
+    - [x] Flip card
+    - [x] Mark as known, next card
+    - [x] Next card
+    - [x] Card filters

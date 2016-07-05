@@ -2,47 +2,33 @@
 <html>
 <head>
     <title>CS Flash Cards</title>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}" />
-    <!-- I know this doesn't belong in head, but I have script in a template that needs to have jQuery -->
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-    <script src="https://use.fontawesome.com/8cea844162.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"/>
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-xs-12">
 
-                <br />
+                <br/>
                 <nav class="navbar navbar-default">
-                  <div class="container-fluid">
-                    <!-- toggle menu -->
                     <div class="navbar-header">
-                      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                      </button>
-                      <a class="navbar-brand" href="#">CS Flash Cards</a>
+                        <a class="navbar-brand" href="{{ url_for('index') }}">CS Flash Cards</a>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            {% if not session.logged_in %}
+                                <li><a href="{{ url_for('login') }}">log in</a></li>
+                            {% else %}
+                                <li><a href="{{ url_for('cards') }}">cards</a></li>
+                                <li><a href="{{ url_for('general') }}">general</a></li>
+                                <li><a href="{{ url_for('code') }}">code</a></li>
+                                <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+                                <li><a href="{{ url_for('logout') }}">log out</a></li>
+                            {% endif %}
+                        </ul>
                     </div>
-
-                    <!-- full menu -->
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                      <ul class="nav navbar-nav navbar-right">
-                        {% if not session.logged_in %}
-                            <li><a href="{{ url_for('login') }}">log in</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('cards') }}">cards</a></li>
-                            <li><a href="{{ url_for('general') }}">general</a></li>
-                            <li><a href="{{ url_for('code') }}">code</a></li>
-                            <li><a href="{{ url_for('logout') }}">log out</a></li>
-                        {% endif %}
-                      </ul>
-                    </div><!-- /.navbar-collapse -->
-                  </div><!-- /.container-fluid -->
                 </nav>
-
 
                 {% for message in get_flashed_messages() %}
                     <div class="alert alert-success" role="alert">{{ message }}</div>
@@ -51,6 +37,11 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://use.fontawesome.com/8cea844162.js"></script>
+    <script src="{{ url_for('static', filename='fastclick.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='general.js') }}"></script>
 </body>
 </html>

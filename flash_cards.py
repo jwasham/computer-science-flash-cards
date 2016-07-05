@@ -57,7 +57,10 @@ def close_db(error):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    if session.get('logged_in'):
+        return redirect(url_for('general'))
+    else:
+        return redirect(url_for('login'))
 
 
 @app.route('/cards')
@@ -65,9 +68,39 @@ def cards():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
-    cur = db.execute('SELECT id, type, front, back, known FROM cards ORDER BY id DESC')
+    query = '''
+        SELECT id, type, front, back, known
+        FROM cards
+        ORDER BY id DESC
+    '''
+    cur = db.execute(query)
     cards = cur.fetchall()
-    return render_template('cards.html', cards=cards)
+    return render_template('cards.html', cards=cards, filter_name=None)
+
+
+@app.route('/filter_cards/<filter_name>')
+def filter_cards(filter_name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    filters = {
+        "all":      "where 1 = 1",
+        "general":  "where type = 1",
+        "code":     "where type = 2",
+        "known":    "where known = 1",
+        "unknown":  "where known = 0",
+    }
+
+    query = filters.get(filter_name)
+
+    if not query:
+        return redirect(url_for('cards'))
+
+    db = get_db()
+    fullquery = "SELECT id, type, front, back, known FROM cards " + query + " ORDER BY id DESC"
+    cur = db.execute(fullquery)
+    cards = cur.fetchall()
+    return render_template('cards.html', cards=cards, filter_name=filter_name)
 
 
 @app.route('/add', methods=['POST'])
@@ -90,7 +123,12 @@ def edit(card_id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
-    cur = db.execute('SELECT * FROM cards WHERE id = ?', [card_id])
+    query = '''
+        SELECT id, type, front, back, known
+        FROM cards
+        WHERE id = ?
+    '''
+    cur = db.execute(query, [card_id])
     card = cur.fetchone()
     return render_template('edit.html', card=card)
 
@@ -102,7 +140,16 @@ def edit_card():
     selected = request.form.getlist('known')
     known = bool(selected)
     db = get_db()
-    db.execute('UPDATE cards set type = ?, front = ?, back = ?, known = ? where id = ?',
+    command = '''
+        UPDATE cards
+        SET
+          type = ?,
+          front = ?,
+          back = ?,
+          known = ?
+        WHERE id = ?
+    '''
+    db.execute(command,
                [request.form['type'],
                 request.form['front'],
                 request.form['back'],
@@ -129,14 +176,62 @@ def delete(card_id):
 def general():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    return render_template('general.html')
+    return memorize("general")
 
 
 @app.route('/code')
 def code():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    return render_template('code.html')
+    return memorize("code")
+
+
+def memorize(card_type):
+    if card_type == "general":
+        type = 1
+    elif card_type == "code":
+        type = 2
+    else:
+        return redirect(url_for('cards'))
+
+    card = get_card(type)
+    if not card:
+        flash("You've learned all the " + card_type + " cards.")
+        return redirect(url_for('cards'))
+    short_answer = (len(card['back']) < 75)
+    return render_template('memorize.html',
+                           card=card,
+                           card_type=card_type,
+                           short_answer=short_answer)
+
+
+def get_card(type):
+    db = get_db()
+
+    query = '''
+      SELECT
+        id, type, front, back, known
+      FROM cards
+      WHERE
+        type = ?
+        and known = 0
+      ORDER BY RANDOM()
+      LIMIT 1
+    '''
+
+    cur = db.execute(query, [type])
+    return cur.fetchone()
+
+
+@app.route('/mark_known/<card_id>/<card_type>')
+def mark_known(card_id, card_type):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('UPDATE cards SET known = 1 WHERE id = ?', [card_id])
+    db.commit()
+    flash('Card marked as known.')
+    return redirect(url_for(card_type))
 
 
 @app.route('/login', methods=['GET', 'POST'])
