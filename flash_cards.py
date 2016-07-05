@@ -245,7 +245,6 @@ def login():
         else:
             session['logged_in'] = True
             session.permanent = True  # stay logged in
-            flash('You were logged in')
             return redirect(url_for('cards'))
     return render_template('login.html', error=error)
 
