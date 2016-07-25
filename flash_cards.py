@@ -173,20 +173,22 @@ def delete(card_id):
 
 
 @app.route('/general')
-def general():
+@app.route('/general/<card_id>')
+def general(card_id=None):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    return memorize("general")
+    return memorize("general", card_id)
 
 
 @app.route('/code')
-def code():
+@app.route('/code/<card_id>')
+def code(card_id=None):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    return memorize("code")
+    return memorize("code", card_id)
 
 
-def memorize(card_type):
+def memorize(card_type, card_id):
     if card_type == "general":
         type = 1
     elif card_type == "code":
@@ -194,7 +196,10 @@ def memorize(card_type):
     else:
         return redirect(url_for('cards'))
 
-    card = get_card(type)
+    if card_id:
+        card = get_card_by_id(card_id)
+    else:
+        card = get_card(type)
     if not card:
         flash("You've learned all the " + card_type + " cards.")
         return redirect(url_for('cards'))
@@ -220,6 +225,22 @@ def get_card(type):
     '''
 
     cur = db.execute(query, [type])
+    return cur.fetchone()
+
+
+def get_card_by_id(card_id):
+    db = get_db()
+
+    query = '''
+      SELECT
+        id, type, front, back, known
+      FROM cards
+      WHERE
+        id = ?
+      LIMIT 1
+    '''
+
+    cur = db.execute(query, [card_id])
     return cur.fetchone()
 
 

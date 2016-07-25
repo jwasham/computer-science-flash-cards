@@ -87,5 +87,17 @@
             </a>
         </div>
     </div>
+    <div class="row">
+        <div class="col-xs-12 text-center">
+            <br />
+            <br />
+            <br />
+            <a href="{{ url_for(card_type, card_id=card.id) }}" class="btn btn-default btn-sm">
+                <i class="fa fa-bookmark"></i>
+                bookmark this card (#{{ card.id }})
+            </a>
+
+        </div>
+    </div>
 
 {% endblock %}
