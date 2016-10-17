@@ -52,4 +52,11 @@ It uses:
 1. When you're ready to start memorizing, click either "General" or "Code"
     in the top menu.
 
+## How to run with Docker
+__Make sure you already installed [docker](https://www.docker.com)__
+- Clone project to any where you want and go to source folder
+- Build image: `docker build . -t cs-flash-cards`
+- Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
+- Go your browser and type `http://localhost:8000`
+
 *Happy learning!*
