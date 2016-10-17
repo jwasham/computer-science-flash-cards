@@ -26,6 +26,8 @@ It uses:
 
 ## How to run it
 
+*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
+
 1. Clone project to a directory on your web server.
 1. Edit the config.txt file. The username and password will be the login
     for your site. There is only one user - you.
