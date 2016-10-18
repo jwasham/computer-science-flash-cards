@@ -6,6 +6,10 @@ WORKDIR /src
 RUN pip install flask gunicorn \
     && cp cards-jwasham.db cards.db
 
-CMD ["gunicorn", "--bind", " 0.0.0.0:8000", "flash_cards:app"]
+COPY entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 8000
+CMD ["/entrypoint.sh"]
 
 
