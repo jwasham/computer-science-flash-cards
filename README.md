@@ -24,10 +24,10 @@ It uses:
 
 ---
 
-## How to run it
+## How to run it on a server
 
 1. Clone project to a directory on your web server.
-1. Edit the config.txt file. The username and password will be the login
+1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login 
     for your site. There is only one user - you.
 1. Follow this long tutorial to get Flask running. It was way more work than it should be:
     https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-16-04
@@ -53,10 +53,35 @@ It uses:
     in the top menu.
 
 ## How to run with Docker
+
+*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
+
 __Make sure you already installed [docker](https://www.docker.com)__
-- Clone project to any where you want and go to source folder
-- Build image: `docker build . -t cs-flash-cards`
-- Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
-- Go your browser and type `http://localhost:8000`
+
+1. Clone project to any where you want and go to source folder.
+1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login 
+    for your site. There is only one user - you.
+1. Build image: `docker build . -t cs-flash-cards`
+1. Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
+1. Go your browser and type `http://localhost:8000`
+
+__If you already had a backup file `cards.db`. Run following command:__
+*Note: We don't need to rebuild image, just delete old container if you already built.*
+`docker run -d -p 8000:8000 --name cs-flash-cards -v :<path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
+`<path_to_folder_contains_cards_db>`: is the full path contains `cards.db`
+Example: `/home/tinpee/cs-flash-cards/db`, and `cards.db` is inside this folder.
+
+For convenient, if you don't have `cards.db`, this container will auto copy a new one from `cards-jwasham.db`. So you don't need to `initdb`
+
+__How to backup data ?__
+We just need store `cards.db` file, and don't need any sql command.
+- If you run container with `-v <folder_db>:/src/db` just go to `folder_db` and store `cards.db` anywhere you want.
+- Without `-v flag`. Type: `docker cp <name_of_container>:/src/db/cards.db /path/to/save`
+
+__How to restore data ?__
+- Delete old container (not image): `docker rm cs-flash-cards`
+- Build a new one with `-v flag`:
+`docker run -d -p 8000:8000 --name cs-flash-cards -v :<path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
+- Voila :)
 
 *Happy learning!*
