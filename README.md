@@ -24,12 +24,10 @@ It uses:
 
 ---
 
-## How to run it
-
-*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
+## How to run it on a server
 
 1. Clone project to a directory on your web server.
-1. Edit the config.txt file. The username and password will be the login
+1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login 
     for your site. There is only one user - you.
 1. Follow this long tutorial to get Flask running. It was way more work than it should be:
     https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-16-04
@@ -55,10 +53,16 @@ It uses:
     in the top menu.
 
 ## How to run with Docker
+
+*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
+
 __Make sure you already installed [docker](https://www.docker.com)__
-- Clone project to any where you want and go to source folder
-- Build image: `docker build . -t cs-flash-cards`
-- Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
-- Go your browser and type `http://localhost:8000`
+
+1. Clone project to any where you want and go to source folder.
+1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login 
+    for your site. There is only one user - you.
+1. Build image: `docker build . -t cs-flash-cards`
+1. Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
+1. Go your browser and type `http://localhost:8000`
 
 *Happy learning!*
