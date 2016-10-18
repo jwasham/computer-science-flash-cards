@@ -64,5 +64,6 @@ __Make sure you already installed [docker](https://www.docker.com)__
 1. Build image: `docker build . -t cs-flash-cards`
 1. Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
 1. Go your browser and type `http://localhost:8000`
+1. To back up your cards db, run `docker cp cs-flash-cards:/src/cards.db /path/to/save`
 
 *Happy learning!*
