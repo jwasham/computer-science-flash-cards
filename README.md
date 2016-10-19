@@ -64,6 +64,24 @@ __Make sure you already installed [docker](https://www.docker.com)__
 1. Build image: `docker build . -t cs-flash-cards`
 1. Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`
 1. Go your browser and type `http://localhost:8000`
-1. To back up your cards db, run `docker cp cs-flash-cards:/src/cards.db /path/to/save`
+
+__If you already had a backup file `cards.db`. Run following command:__
+*Note: We don't need to rebuild image, just delete old container if you already built.*
+`docker run -d -p 8000:8000 --name cs-flash-cards -v :<path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
+`<path_to_folder_contains_cards_db>`: is the full path contains `cards.db`
+Example: `/home/tinpee/cs-flash-cards/db`, and `cards.db` is inside this folder.
+
+For convenient, if you don't have `cards.db`, this container will auto copy a new one from `cards-jwasham.db`. So you don't need to `initdb`
+
+__How to backup data ?__
+We just need store `cards.db` file, and don't need any sql command.
+- If you run container with `-v <folder_db>:/src/db` just go to `folder_db` and store `cards.db` anywhere you want.
+- Without `-v flag`. Type: `docker cp <name_of_container>:/src/db/cards.db /path/to/save`
+
+__How to restore data ?__
+- Delete old container (not image): `docker rm cs-flash-cards`
+- Build a new one with `-v flag`:
+`docker run -d -p 8000:8000 --name cs-flash-cards -v :<path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
+- Voila :)
 
 *Happy learning!*
