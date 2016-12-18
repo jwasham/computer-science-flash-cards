@@ -24,6 +24,22 @@ It uses:
 
 ---
 
+## Important Note
+
+**I don’t recommend my flash card set.**
+
+The set included in this project (cards-jwasham.db) is not my full set, and is way too big already.
+
+Thanks for asking for my list of 1,792 cards. But it’s too much. I even printed them out. It’s 50 pages, front and back, in tiny text. It would take about 8 hours to just read them all.
+
+**If you look at my set, you’ll just get discouraged.**
+
+My set includes a lot of obscure info from books I’ve read and machine learning knowledge.
+
+Please make your own set, and while you’re making them, only make cards for what you need to know. Otherwise, it gets out of hand. 
+
+Don't be like me.
+
 ## How to run it on a server
 
 1. Clone project to a directory on your web server.
