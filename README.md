@@ -82,7 +82,7 @@ __If you already had a backup file `cards.db`. Run following command:__
 `<path_to_folder_contains_cards_db>`: is the full path contains `cards.db`.
 Example: `/home/tinpee/cs-flash-cards/db`, and `cards.db` is inside this folder.
 
-For convenient, if you don't have `cards.db`, this container will auto copy a new one from `cards-jwasham.db`. So you don't need to `initdb`.
+For convenience, if you don't have `cards.db`, this container will auto copy a new one from `cards-empty.db`.
 
 ### How to backup data ?
 We just need store `cards.db` file, and don't need any sql command.
