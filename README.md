@@ -28,13 +28,15 @@ It uses:
 
 **I don’t recommend my flash card set.**
 
-The set included in this project (cards-jwasham.db) is not my full set, and is way too big already.
+The set included in this project (**cards-jwasham.db**) is not my full set, and is way too big already.
 
 Thanks for asking for my list of 1,792 cards. But it’s too much. I even printed them out. It’s 50 pages, front and back, in tiny text. It would take about 8 hours to just read them all.
 
 **If you look at my set, you’ll just get discouraged.**
 
 My set includes a lot of obscure info from books I’ve read and machine learning knowledge.
+
+I've added it to the project if you want it (**cards-jwasham-extreme.db**). You've been warned.
 
 Please make your own set, and while you’re making them, only make cards for what you need to know. Otherwise, it gets out of hand. 
 
@@ -56,13 +58,6 @@ Don't be like me.
     sudo systemctl daemon-reload
     ```
 1. When you see a login page, you're good to go.
-1. Uncomment the commented block in `flash_cards.py`
-1. Restart Flask. You have to use `sudo systemctl restart flash_cards`.
-1. Hit the URL /initdb on your web server. You'll see a message that the
-    database has been initialized.
-1. Comment that code again.
-1. Restart Flask.
-1. Go to / on your webserver.
 1. Log in.
 1. Click the "General" or "Code" button and make a card!
 1. When you're ready to start memorizing, click either "General" or "Code"
