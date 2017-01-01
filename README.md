@@ -24,6 +24,18 @@ It uses:
 
 ---
 
+## About the Site
+
+Here's a brief rundown: https://googleyasheck.com/flash-cards-site-complete/
+
+## Screenshots
+
+![Card UI](screenshots/cards_ui-1467754141259.png)
+
+![Memorizing general knowledge](screenshots/memorize_ui-1467754306971.png)
+
+![Code view](screenshots/memorize_code-1467754962142.png)
+
 ## Important Note
 
 The set included in this project (**cards-jwasham.db**) is not my full set, and is way too big already.
