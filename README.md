@@ -32,9 +32,15 @@ Here's a brief rundown: https://googleyasheck.com/flash-cards-site-complete/
 
 ![Card UI](screenshots/cards_ui-1467754141259.png)
 
+UI for listing cards. From here you can add and edit cards.
+
 ![Memorizing general knowledge](screenshots/memorize_ui-1467754306971.png)
 
+The front of a General flash card.
+
 ![Code view](screenshots/memorize_code-1467754962142.png)
+
+The reverse (answer side) of a Code flash card.
 
 ## Important Note
 
