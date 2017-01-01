@@ -97,4 +97,11 @@ We just need store `cards.db` file, and don't need any sql command.
 `docker run -d -p 8000:8000 --name cs-flash-cards -v <path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
 - Voila :)
 
+## Alternative for Node fans
+
+[@ashwanikumar04](https://github.com/ashwanikumar04) put together an alternative flash cards site running Node: https://github.com/ashwanikumar04/flash-cards
+
+Check out the demo!
+
 *Happy learning!*
+
