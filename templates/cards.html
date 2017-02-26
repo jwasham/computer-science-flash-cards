@@ -57,7 +57,7 @@
                     {% if card.type == 1 %}
                         {{ card.back|replace("\n", "<br />")|safe }}
                     {% else %}
-                        <pre>{{ card.back|safe }}</pre>
+                        <pre><code>{{ card.back|safe }}</code></pre>
                     {% endif %}
                 </td>
             </tr>
