@@ -90,11 +90,11 @@ Thanks [@eyedol](https://github.com/eyedol)
 ## How to run it on local host (Quick Guide)
 
 1. Install dependecies
-    a. Install [Python ](https://www.python.org/download/releases/2.7/)
-    b. Add python as environment variable [windows](http://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-7)
-    c. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
-    d. Run ```python get-pip.py```in terminal
-    e. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
+  1. Install [Python ](https://www.python.org/download/releases/2.7/)
+  2. Add python as environment variable [windows](http://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-7)
+  3. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
+  4. Run ```python get-pip.py```in terminal
+  5. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
 2. Open flash_cards.py and uncomment the line 52-55 begining from ``` @app.route('/initdb')```
 3. Type ```python flash_cards.py``` 
 
