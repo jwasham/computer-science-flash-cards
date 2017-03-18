@@ -87,6 +87,21 @@ Thanks [@eyedol](https://github.com/eyedol)
 1. When you're ready to start memorizing, click either "General" or "Code"
     in the top menu.
 
+## How to run it on local host (Quick Guide)
+
+1. Install dependecies
+    a. Install [Python ](https://www.python.org/download/releases/2.7/)
+    b. Add python as environment variable [windows](http://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-7)
+    c. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
+    d. Run ```python get-pip.py```in terminal
+    e. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
+2. Open flash_cards.py and uncomment the line 52-55 begining from ``` @app.route('/initdb')```
+3. Type ```python flash_cards.py``` 
+
+4. Login using id:USERNAME='admin', PASSWORD='default. Open localhost:5000/initdb
+
+Everytime you wish to run your db just open folder in terminal and run  ```python flash_cards.py```
+
 ## How to run with Docker
 
 *Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
