@@ -51,8 +51,8 @@ def close_db(error):
 #   You can rerun it to pave the database and start over
 #@app.route('/initdb')
 #def initdb():
-    #init_db()
-    #return 'Initialized the database.'
+#    init_db()
+#    return 'Initialized the database.'
 
 
 @app.route('/')
