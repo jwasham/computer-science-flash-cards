@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 config-personal.txt
 cards.db
+env
