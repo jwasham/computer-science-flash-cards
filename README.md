@@ -89,7 +89,7 @@ Thanks [@eyedol](https://github.com/eyedol)
 
 ## How to run it on local host (Quick Guide)
 
-*Provided by [@devyash](https://github.com/devyash) - devyashsanghai@gmail.com Reach out to this contributor if you have trouble.*
+*Provided by [@devyash](https://github.com/devyash) - devyashsanghai@gmail.com - Reach out to this contributor if you have trouble.*
 
 1. Install dependencies:
   1. Install [Python ](https://www.python.org/download/releases/2.7/)
@@ -106,7 +106,7 @@ Every time you wish to run your db just open folder in terminal and run  ```pyth
 
 ## How to run with Docker
 
-*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com Reach out to this contributor if you have trouble.*
+*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com - Reach out to this contributor if you have trouble.*
 
 __Make sure you already installed [docker](https://www.docker.com)__
 
