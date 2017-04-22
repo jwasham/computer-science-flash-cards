@@ -89,7 +89,9 @@ Thanks [@eyedol](https://github.com/eyedol)
 
 ## How to run it on local host (Quick Guide)
 
-1. Install dependecies
+*Provided by [@devyash](https://github.com/devyash) - devyashsanghai@gmail.com Reach out to this contributor if you have trouble.*
+
+1. Install dependencies:
   1. Install [Python ](https://www.python.org/download/releases/2.7/)
   2. Add python as environment variable [windows](http://stackoverflow.com/questions/3701646/how-to-add-to-the-pythonpath-in-windows-7)
   3. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
@@ -100,11 +102,11 @@ Thanks [@eyedol](https://github.com/eyedol)
 
 4. Login using id:USERNAME='admin', PASSWORD='default. Open localhost:5000/initdb
 
-Everytime you wish to run your db just open folder in terminal and run  ```python flash_cards.py```
+Every time you wish to run your db just open folder in terminal and run  ```python flash_cards.py```
 
 ## How to run with Docker
 
-*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com*
+*Provided by [@Tinpee](https://github.com/tinpee) - tinpee.dev@gmail.com Reach out to this contributor if you have trouble.*
 
 __Make sure you already installed [docker](https://www.docker.com)__
 
@@ -122,6 +124,8 @@ __If you already had a backup file `cards.db`. Run following command:__
 Example: `/home/tinpee/cs-flash-cards/db`, and `cards.db` is inside this folder.
 
 For convenience, if you don't have `cards.db`, this container will auto copy a new one from `cards-empty.db`.
+
+---
 
 ### How to backup data ?
 We just need store `cards.db` file, and don't need any sql command.
