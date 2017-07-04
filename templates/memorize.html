@@ -47,7 +47,7 @@
                                     </div>
                                 {% endif %}
                             {% else %}
-                                <pre><code>{{ card.back|safe }}</code></pre>
+                                <pre><code>{{ card.back|escape }}</code></pre>
                             {% endif %}
                         </div>
                     </div>
