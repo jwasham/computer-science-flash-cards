@@ -5,3 +5,4 @@ __pycache__/
 config-personal.txt
 cards.db
 env
+node_modules

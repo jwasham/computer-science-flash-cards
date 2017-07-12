@@ -13,17 +13,6 @@
     <hr/>
 
     <div class="row memorizePanel">
-        <!--
-        <div class="col-xs-2">
-            <div class="alignContainer">
-                <div class="alignMiddle text-right">
-                    <br/>
-                    <br/>
-                    <a href="wewetw"><i class="fa fa-chevron-left fa-5x"></i></a>
-                </div>
-            </div>
-        </div>
-        -->
         <div class="col-xs-8 col-xs-offset-2">
             <div class="panel panel-default cardFront">
                 <div class="panel-body">
@@ -40,9 +29,9 @@
                         <div class="alignMiddle frontText">
                             {% if card.type == 1 %}
                                 {% if short_answer %}
-                                    <div class="text-center largerText">
+                                    <div class="largeText">
                                 {% endif %}
-                                    {{ card.back|replace("\n", "<br />")|safe }}
+                                <div id="card_back">{{ card.back|safe }}</div>
                                 {% if short_answer %}
                                     </div>
                                 {% endif %}
@@ -54,17 +43,6 @@
                 </div>
             </div>
         </div>
-        <!--
-        <div class="col-xs-2">
-            <div class="alignContainer">
-                <div class="alignMiddle text-left">
-                    <br/>
-                    <br/>
-                    <a href="ergergerge"><i class="fa fa-chevron-right fa-5x"></i></a>
-                </div>
-            </div>
-        </div>
-        -->
     </div>
 
     <div class="row">

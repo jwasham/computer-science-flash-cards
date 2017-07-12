@@ -26,7 +26,7 @@ It uses:
 
 ## About the Site
 
-Here's a brief rundown: https://googleyasheck.com/flash-cards-site-complete/
+Here's a brief rundown: https://startupnextdoor.com/flash-cards-site-complete/
 
 ## Screenshots
 
@@ -56,7 +56,7 @@ My set includes a lot of obscure info from books I’ve read, Python trivia, mac
 
 I've added it to the project if you want it (**cards-jwasham-extreme.db**). You've been warned.
 
-Please make your own set, and while you’re making them, only make cards for what you need to know. Otherwise, it gets out of hand. 
+Please make your own set, and while you’re making them, only make cards for what you need to know. Otherwise, it gets out of hand.
 
 ## How to convert to Anki or CSV
 
@@ -69,7 +69,7 @@ Thanks [@eyedol](https://github.com/eyedol)
 ## How to run it on a server
 
 1. Clone project to a directory on your web server.
-1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login 
+1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login
     for your site. There is only one user - you.
 1. Follow this long tutorial to get Flask running. It was way more work than it should be:
     https://www.digitalocean.com/community/tutorials/how-to-serve-flask-applications-with-uwsgi-and-nginx-on-ubuntu-16-04
@@ -97,8 +97,9 @@ Thanks [@eyedol](https://github.com/eyedol)
   3. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
   4. Run ```python get-pip.py```in terminal
   5. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
+  6. Run ```npm install --prefix static``` in terminal from project root
 2. Open flash_cards.py and uncomment the line 52-55 begining from ``` @app.route('/initdb')```
-3. Type ```python flash_cards.py``` 
+3. Type ```python flash_cards.py```
 
 4. Login using id:USERNAME='admin', PASSWORD='default. Open localhost:5000/initdb
 
@@ -111,7 +112,7 @@ Every time you wish to run your db just open folder in terminal and run  ```pyth
 __Make sure you already installed [docker](https://www.docker.com)__
 
 1. Clone project to any where you want and go to source folder.
-1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login 
+1. Edit the config.txt file. Change the secret key, username and password. The username and password will be the login
     for your site. There is only one user - you.
 1. Build image: `docker build . -t cs-flash-cards`
 1. Run container: `docker run -d -p 8000:8000 --name cs-flash-cards cs-flash-cards`

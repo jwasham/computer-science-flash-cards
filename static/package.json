@@ -1,0 +1,12 @@
+{
+  "name": "computer-science-flash-cards",
+  "description": "Mini website for testing both general CS knowledge and enforce coding practice and common algorithm/data structure memorization.",
+  "author": "jwasham",
+  "dependencies": {
+    "markdown": "^0.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jwasham/computer-science-flash-cards.git"
+  }
+}

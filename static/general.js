@@ -1,10 +1,13 @@
-$(document).ready(function(){
+$(document).ready(function() {
     if ($('.memorizePanel').length != 0) {
 
         $('.flipCard').click(function(){
             if ($('.cardFront').is(":visible") == true) {
                 $('.cardFront').hide();
                 $('.cardBack').show();
+                if ($('#card_back').length != 0) {
+                    $('#card_back').html(markdown.toHTML($('#card_back').html()));
+                }
             } else {
                 $('.cardFront').show();
                 $('.cardBack').hide();
@@ -29,6 +32,8 @@ $(document).ready(function(){
 
     if ($('.editPanel').length != 0) {
 
+        var simplemde = null;
+
         function checkit() {
             var checkedVal = $('input[name=type]:checked').val();
             if (checkedVal === undefined) {
@@ -42,7 +47,16 @@ $(document).ready(function(){
 
                 if (checkedVal == '1') {
                     $('textarea[name=back]').attr('rows', 5);
+                    if (simplemde === null) {
+                        simplemde = new SimpleMDE({
+                            element: $('textarea[name=back]')[0]
+	                });
+                    }
                 } else {
+                    if (simplemde !== null) {
+                        simplemde.toTextArea();
+                        simplemde = null;
+                    }
                     $('textarea[name=back]').attr('rows', 12);
                 }
 
