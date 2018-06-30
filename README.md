@@ -119,7 +119,7 @@ __Make sure you already installed [docker](https://www.docker.com)__
 
 __If you already had a backup file `cards.db`. Run following command:__
 *Note: We don't need to rebuild image, just delete old container if you already built.*
-`docker run -d -p 8000:8000 --name cs-flash-cards -v :<path_to_folder_contains_cards_db>:/src/db cs-flash-cards`.
+`docker run -d -p 8000:8000 --name cs-flash-cards -v <path_to_folder_contains_cards_db>:/src/db cs-flash-cards`.
 `<path_to_folder_contains_cards_db>`: is the full path contains `cards.db`.
 Example: `/home/tinpee/cs-flash-cards/db`, and `cards.db` is inside this folder.
 
