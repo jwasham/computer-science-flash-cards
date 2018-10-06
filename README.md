@@ -97,7 +97,7 @@ Thanks [@eyedol](https://github.com/eyedol)
   3. To install pip, securely download [get-pip.py](https://bootstrap.pypa.io/get-pip.py)
   4. Run ```python get-pip.py```in terminal
   5. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
-2. Open flash_cards.py and uncomment the line 52-55 begining from ``` @app.route('/initdb')```
+2. Open flash_cards.py and uncomment the line 52-55 beginning from ``` @app.route('/initdb')```
 3. Type ```python flash_cards.py``` 
 
 4. Login using id:USERNAME='admin', PASSWORD='default. Open localhost:5000/initdb
