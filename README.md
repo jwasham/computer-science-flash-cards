@@ -99,8 +99,9 @@ Thanks [@eyedol](https://github.com/eyedol)
   5. Run ``` pip install -r requirements.txt``` in terminal after going to correct folder
 2. Open flash_cards.py and uncomment the line 52-55 beginning from ``` @app.route('/initdb')```
 3. Type ```python flash_cards.py``` 
-
-4. Login using id:USERNAME='admin', PASSWORD='default. Open localhost:5000/initdb
+4. Open localhost:5000/initdb
+5. Login using id:USERNAME='admin', PASSWORD='default. 
+6. Comment the line 52-55 in flash_cards.py
 
 Every time you wish to run your db just open folder in terminal and run  ```python flash_cards.py```
 
