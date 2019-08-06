@@ -139,6 +139,28 @@ We just need store `cards.db` file, and don't need any sql command.
 `docker run -d -p 8000:8000 --name cs-flash-cards -v <path_to_folder_contains_cards_db>:/src/db cs-flash-cards`
 - Voila :)
 
+### How to deploy docker file on heroku
+
+- first install [heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+- change `entrypoint.sh`
+```
+- export CARDS_SETTINGS=/src/config.txt
+gunicorn --bind  0.0.0.0:$8000 flash_cards:app
++ export CARDS_SETTINGS=/src/config.txt
+gunicorn --bind  0.0.0.0:$PORT flash_cards:app
+```
+- deploy docker file with following commands
+
+```shell
+heroku login
+heroku container:login
+heroku create 
+# Creating app... done, ⬢ your-app-name
+heroku container:push web --app your-app-name
+heroku container:release web --app your-app-name
+heroku open --app your-app-name
+```
+
 ## Alternative for Node fans
 
 [@ashwanikumar04](https://github.com/ashwanikumar04) put together an alternative flash cards site running Node: https://github.com/ashwanikumar04/flash-cards
