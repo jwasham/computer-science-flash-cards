@@ -26,7 +26,7 @@ It uses:
 
 ## About the Site
 
-Here's a brief rundown: https://googleyasheck.com/flash-cards-site-complete/
+Here's a brief rundown: https://startupnextdoor.com/flash-cards-site-complete/
 
 ## Screenshots
 
