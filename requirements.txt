@@ -26,4 +26,4 @@ scour==0.32
 six==1.10.0
 urllib3==1.15.1
 virtualenv==15.1.0
-Werkzeug==0.11.15
+Werkzeug==0.15.3
