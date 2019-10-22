@@ -18,7 +18,7 @@ ndg-httpsclient==0.4.2
 psutil==4.2.0
 pyasn1==0.1.9
 pycurl==7.43.0
-pyOpenSSL==16.1.0
+pyOpenSSL==17.5.0
 pytz==2016.10
 pyxdg==0.25
 requests==2.11.1
