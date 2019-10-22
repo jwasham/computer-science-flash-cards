@@ -24,6 +24,6 @@ pyxdg==0.25
 requests==2.11.1
 scour==0.32
 six==1.10.0
-urllib3==1.15.1
+urllib3==1.24.2
 virtualenv==15.1.0
 Werkzeug==0.15.3
