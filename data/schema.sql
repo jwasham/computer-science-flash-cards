@@ -6,3 +6,9 @@ create table cards (
   back text not null,
   known boolean default 0
 );
+
+drop table if exists card_types;
+CREATE TABLE "card_types" (
+	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
+	"card_name"	TEXT
+);
