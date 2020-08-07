@@ -75,7 +75,14 @@ def cards():
     '''
     cur = db.execute(query)
     cards = cur.fetchall()
-    return render_template('cards.html', cards=cards, filter_name="all")
+    type_query = '''
+        SELECT id, card_name
+        FROM card_types
+        ORDER BY id ASC
+    '''
+    type_cur = db.execute(type_query)
+    card_types = type_cur.fetchall()
+    return render_template('cards.html', cards=cards, card_types=card_types, filter_name="all")
 
 
 @app.route('/filter_cards/<filter_name>')
