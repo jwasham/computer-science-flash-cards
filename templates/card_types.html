@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <h2>Card types</h2>
+
+    <div class="row panel-body">
+        <table class="table table-bordered">
+            <tr>
+                <td> Card </td>
+                <td> Edit Card </td>
+                <td> Take a Test </td>
+                <td> View Cards </td>
+                <td> Known </td>
+                <td> Unknown </td>
+                <td> Clear Knowns </td>
+                <td> Recommendations </td>
+                <td> Delete Card</td>
+            </tr>
+            {% for card_type in card_types %}
+            <tr>
+                <td>{{ card_type.card_name }}</td>
+                <td>
+                    <a href="/edit/card/{{ card_type.card_name }}" class="btn btn-primary" role="button">Edit</a>
+                </td>
+                <td>
+                    <a href="/test/{{ card_type.card_name }}" class="btn btn-primary" role="button">Test</a> &nbsp;&nbsp;
+                    <a href="/test/results/{{ card_type.card_name }}" class="btn btn-primary" role="button">Results</a>
+                </td>
+                <td>
+                    <a href="/filter_cards/{{ card_type.card_name }}" class="btn btn-primary" role="button">View</a> 
+                </td>
+                <td>
+                    {{ card_type.known }}
+                </td>
+                <td>
+                    {{ card_type.unknown }} 
+                </td>
+                <td>
+                    <a href="/clear_knowns/card/{{ card_type.id }}" class="btn btn-primary" role="button">Clear</a>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <a href="/delete/card/{{ card_type.card_name }}" class="btn btn-primary" role="button">Delete</a> 
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+{% endblock %}

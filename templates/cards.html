@@ -29,25 +29,23 @@
         </form>
     </div>
 
-    <div class="page-header">
-        <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
-    </div>
-    <div class="btn-group btn-group-md" role="group" aria-label="filters">
-        <a href="{{ url_for('filter_cards', filter_name="all") }}" class="btn btn-{{ "primary" if filter_name == "all" else "default" }}">All</a>
-        <a href="{{ url_for('filter_cards', filter_name="general") }}" class="btn btn-{{ "primary" if filter_name == "general" else "default" }}">General</a>
-        <a href="{{ url_for('filter_cards', filter_name="code") }}" class="btn btn-{{ "primary" if filter_name == "code" else "default" }}">Code</a>
-        <a href="{{ url_for('filter_cards', filter_name="known") }}" class="btn btn-{{ "primary" if filter_name == "known" else "default" }}">Known</a>
-        <a href="{{ url_for('filter_cards', filter_name="unknown") }}" class="btn btn-{{ "primary" if filter_name == "unknown" else "default" }}">Unknown</a>
-    </div>
-
-    <br />
-    <br />
-
+    <div class="row panel-body">
     <table class="table table-bordered">
+            <tr>
+                <td>Edit</td>
+                <td>Known</td>
+                <td>Card Details</td>
+                <td>Update Multiple Choices</td>
+            </tr>
         {% for card in cards %}
             <tr>
                 <td>
                     <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </td>
+                <td>
+                    {% if card.known == True %}
+                    known
+                    {% endif %}
                 </td>
                 <td class="cardContent">
                     <h4>
@@ -59,6 +57,9 @@
                         <pre><code>{{ card.back|escape }}</code></pre>
                     {% endif %}
                 </td>
+                <td>
+                    <a href="/update/multiple_choices/card/{{ card.id }}" class="btn btn-primary" role="button">Update</a> 
+                </td>
             </tr>
         {% else %}
             <tr>
@@ -68,7 +69,7 @@
             </tr>
         {% endfor %}
     </table>
-
+    </div>
 
 
 

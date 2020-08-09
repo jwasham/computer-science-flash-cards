@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <h2>Update Multiple Choices</h2>
+
+    <a href="/filter_cards/{{ card_type.card_name }}">back</a>
+
+    <div class="row panel-body">
+        <table class="table table-bordered">
+            <tr>
+                <td colspan="3"> Card </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Front: {{ card.front }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    Back: {{ card.back }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">Choices</td>
+            </tr>
+            <tr>
+                <td>Choice</td>
+                <td>Correct Choice (toggle)</td>
+                <td>Delete</td>
+            </tr>
+            {% for choice in multiple_choices %}
+            <tr>
+                <td>{{ choice.card_choice }}</td>
+                <td>
+                    <a href="/update/correct_multiple_choice/card/{{ card.id }}/{{ choice.id }}" class="btn btn-primary" role="button">{% if choice.correct_choice %}YES{% else %}NO{% endif %}</a>
+                </td>
+                <td><a href="/delete/multiple_choice/{{ choice.id }}" class="btn btn-primary" role="button">delete</a> </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td> No multiple choice questions, please add one! </td>
+                <td></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="row panel-body">
+        <h2>Add a Multiple Choice</h2>
+        <form action="/create/multiple_choice/card/{{ card.id }}" method="post" class="choiceForm">
+            <div class="form-group">
+                <div class="form-group fieldChoice">
+                    <label for="choice">Create New Choice</label>
+                    <input type="text" name="choice" id="choice" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="saveButton btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

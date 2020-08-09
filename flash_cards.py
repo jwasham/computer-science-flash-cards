@@ -85,27 +85,43 @@ def cards():
     return render_template('cards.html', cards=cards, card_types=card_types, filter_name="all")
 
 
+@app.route('/card_types')
+def card_types():
+    type_query = '''
+    SELECT 
+        card_types.id,
+        card_types.card_name,
+        SUM(cards.known) AS known,
+        COUNT(cards.id) - SUM(cards.known) as unknown
+    FROM
+        card_types
+    INNER JOIN
+	    cards on cards.type = card_types.id
+    GROUP BY
+        card_types.id,
+        card_types.card_name
+    ORDER BY card_types.id ASC
+    '''
+    db = get_db()
+    type_cur = db.execute(type_query)
+    card_types = type_cur.fetchall()
+    return render_template('card_types.html', card_types=card_types)
+
+
 @app.route('/filter_cards/<filter_name>')
 def filter_cards(filter_name):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-
-    filters = {
-        "all":      "where 1 = 1",
-        "general":  "where type = 1",
-        "code":     "where type = 2",
-        "known":    "where known = 1",
-        "unknown":  "where known = 0",
-    }
-
-    query = filters.get(filter_name)
-
-    if not query:
-        return redirect(url_for('cards'))
-
     db = get_db()
-    fullquery = "SELECT id, type, front, back, known FROM cards " + query + " ORDER BY id DESC"
-    cur = db.execute(fullquery)
+    # TODO make this an inner join to get the multiple choice summary
+    fullquery = """
+        SELECT cards.id, cards.type, cards.front, cards.back, cards.known
+        FROM cards
+        INNER JOIN card_types ON cards.type = card_types.id 
+        WHERE card_types.card_name = ?
+        ORDER BY cards.id DESC
+    """
+    cur = db.execute(fullquery, [filter_name])
     cards = cur.fetchall()
     return render_template('cards.html', cards=cards, filter_name=filter_name)
 
@@ -123,6 +139,82 @@ def add_card():
     db.commit()
     flash('New card was successfully added.')
     return redirect(url_for('cards'))
+
+@app.route('/clear_knowns/card/<card_type>')
+def clear_knowns(card_type):
+    if not session.get('logged_in'):
+        return redirect(url_for('login')) 
+    db = get_db()
+    query = """
+    UPDATE cards SET known = 0 
+    WHERE type = ? 
+    """
+    db.execute(query, card_type)
+    db.commit()
+    return redirect('/card_types')
+
+
+@app.route('/test/<card_name>')
+def card_test(card_name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login')) 
+    # TODO select 10 random cards
+
+    return render_template('test.html')
+
+
+@app.route('/update/multiple_choices/card/<card_id>')
+def update_multiple_choice(card_id):
+    db = get_db()
+    card_query = '''
+        SELECT id, type, front, back, known
+        FROM cards
+        WHERE id = ?
+    '''
+    card_cur = db.execute(card_query, [card_id])
+    card = card_cur.fetchone()
+    query = '''
+        SELECT card_types.id, card_types.card_name FROM card_types
+        INNER JOIN cards ON card_types.id = cards.type
+        WHERE cards.id = ?
+        '''
+    type_cur = db.execute(query, [card_id])
+    card_type = type_cur.fetchone() 
+    multiple_choices_query = '''
+        SELECT 
+            card_multiple_choices.id,
+            card_multiple_choices.card_id,
+            card_multiple_choices.card_choice,
+            card_multiple_choices.correct_choice
+        FROM card_multiple_choices
+        INNER JOIN cards ON cards.id = card_multiple_choices.card_id
+        WHERE cards.id = ?
+    '''
+    multiple_cur = db.execute(multiple_choices_query, [card_id])
+    multiple_choices = multiple_cur.fetchall()
+    return render_template('update_multiple_choices.html', card=card, card_type=card_type, multiple_choices=multiple_choices)
+
+@app.route('/create/multiple_choice/card/<card_id>', methods=['GET','POST'])
+def create_multiple_choice(card_id):
+    db = get_db()
+    new_choice_query = '''
+    INSERT INTO card_multiple_choices (card_id, card_choice) VALUES (?,?)
+    '''
+    db.execute(new_choice_query, [int(card_id), request.form['choice']])
+    db.commit()
+    return redirect('/update/multiple_choices/card/'+str(card_id))
+
+@app.route('/update/correct_multiple_choice/card/<card_id>/<choice_id>')
+def update_correct_multiple_choice(card_id, choice_id):
+    # TODO toggle value in database
+    db = get_db()
+    query = """UPDATE card_multiple_choices 
+    SET correct_choice = NOT correct_choice
+    WHERE id = ?
+    """ 
+    db.execute(query, [choice_id])
+    db.commit()
+    return redirect('/update/multiple_choices/card/'+str(card_id))
 
 
 @app.route('/edit/<card_id>')
@@ -179,6 +271,14 @@ def delete(card_id):
     return redirect(url_for('cards'))
 
 
+@app.route('/card/<card_type>')
+@app.route('/card/<card_type>/<card_id>')
+def card(card_type=None, card_id=None):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return memorize(card_type, card_id)
+
+
 @app.route('/general')
 @app.route('/general/<card_id>')
 def general(card_id=None):
@@ -196,42 +296,37 @@ def code(card_id=None):
 
 
 def memorize(card_type, card_id):
-    if card_type == "general":
-        type = 1
-    elif card_type == "code":
-        type = 2
-    else:
-        return redirect(url_for('cards'))
-
+    #return redirect(url_for('cards'))
     if card_id:
         card = get_card_by_id(card_id)
     else:
-        card = get_card(type)
+        card = get_card(card_type)
     if not card:
         flash("You've learned all the " + card_type + " cards.")
         return redirect(url_for('cards'))
-    short_answer = (len(card['back']) < 75)
+    short_answer = "short answer..." #(len(card['back']) < 75)
     return render_template('memorize.html',
                            card=card,
                            card_type=card_type,
                            short_answer=short_answer)
 
 
-def get_card(type):
+def get_card(card_type):
     db = get_db()
 
     query = '''
-      SELECT
-        id, type, front, back, known
-      FROM cards
-      WHERE
-        type = ?
-        and known = 0
-      ORDER BY RANDOM()
-      LIMIT 1
+    SELECT
+        cards.id, type, front, back, known
+    FROM cards, card_types
+    WHERE
+    cards.type = card_types.id
+    AND card_types.card_name = ?
+    AND known = 0
+    ORDER BY RANDOM()
+    LIMIT 1
     '''
 
-    cur = db.execute(query, [type])
+    cur = db.execute(query, [card_type])
     return cur.fetchone()
 
 
@@ -256,10 +351,15 @@ def mark_known(card_id, card_type):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
-    db.execute('UPDATE cards SET known = 1 WHERE id = ?', [card_id])
+    query = """
+    UPDATE cards 
+    SET known = 1 
+    WHERE id = ?
+    """
+    db.execute(query, [card_id])
     db.commit()
     flash('Card marked as known.')
-    return redirect(url_for(card_type))
+    return redirect("/card/" + card_type)
 
 
 @app.route('/login', methods=['GET', 'POST'])

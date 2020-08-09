@@ -1,17 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
 
-    <div class="row">
-        <div class="col-xs-12 text-center">
-            <div class="btn-group btn-group-lg" role="group" aria-label="card type">
-                <a href="{{ url_for('general') }}" class="btn btn-{{ "primary" if card_type == "general" else "default" }}">General</a>
-                <a href="{{ url_for('code') }}" class="btn btn-{{ "primary" if card_type == "code" else "default" }}">Code</a>
-            </div>
-        </div>
-    </div>
-
-    <hr/>
-
     <div class="row memorizePanel">
         <!--
         <div class="col-xs-2">
@@ -81,7 +70,7 @@
             </a>
             &nbsp;
             &nbsp;
-            <a href="{{ url_for(card_type) }}" class="btn btn-primary btn-lg">
+            <a href="/card/{{ card_type }}" class="btn btn-primary btn-lg">
                 Next Card
                 <i class="fa fa-arrow-right"></i>
             </a>
@@ -92,7 +81,7 @@
             <br />
             <br />
             <br />
-            <a href="{{ url_for(card_type, card_id=card.id) }}" class="btn btn-default btn-sm">
+            <a href="/card/{{ card_type }}" class="btn btn-default btn-sm">
                 <i class="fa fa-bookmark"></i>
                 bookmark this card (#{{ card.id }})
             </a>

@@ -12,3 +12,12 @@ CREATE TABLE "card_types" (
 	"id"	INTEGER PRIMARY KEY AUTOINCREMENT,
 	"card_name"	TEXT
 );
+
+DROP TABLE IF EXISTS card_multiple_choice;
+CREATE TABLE "card_multiple_choices" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "card_id" INTEGER,
+  "card_choice" TEXT NOT NULL,
+  "correct_choice" BOOLEAN DEFAULT 0,
+  FOREIGN KEY (card_id) REFERENCES cards(id)
+);
