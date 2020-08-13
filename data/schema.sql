@@ -13,7 +13,7 @@ CREATE TABLE "card_types" (
 	"card_name"	TEXT
 );
 
-DROP TABLE IF EXISTS card_multiple_choice;
+DROP TABLE IF EXISTS card_multiple_choices;
 CREATE TABLE "card_multiple_choices" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "card_id" INTEGER,
@@ -21,3 +21,44 @@ CREATE TABLE "card_multiple_choices" (
   "correct_choice" BOOLEAN DEFAULT 0,
   FOREIGN KEY (card_id) REFERENCES cards(id)
 );
+
+-- Represents a test for a given category
+-- There can be multiple tests for a given category
+-- Currently a test can only be composed of cards from 1 category
+DROP TABLE IF EXISTS test_multiple_choice;
+CREATE TABLE "test_multiple_choice" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "card_type_id" INTEGER,
+  FOREIGN KEY (card_type_id) REFERENCES card_types(id)
+)
+
+-- Represents the cards for a multiple choice test
+-- There are expected to be more than 1 questions for a test
+DROP TABLE IF EXISTS test_multiple_choice_cards;
+CREATE TABLE "test_multiple_choice_cards" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "test_multiple_choice_id" INTEGER,
+  "card_id" INTEGER,
+  FOREIGN KEY (card_id) REFERENCES cards(id),
+  FOREIGN KEY (test_multiple_choice_id) REFERENCES test_multiple_choice(id)
+)
+
+-- Represents the order of the multiple choices when presented
+-- to the end user in a test
+DROP TABLE IF EXISTS test_multiple_choice_questions_order;
+CREATE TABLE "test_multiple_choice_questions_order" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "position" INTEGER NOT NULL,
+  "test_multiple_choice_card_id" INTEGER NOT NULL,
+  "card_multiple_choice_id" INTEGER,
+  FOREIGN KEY (test_multiple_choice_card_id) REFERENCES test_multiple_choice_cards(id),
+  FOREIGN KEY (card_multiple_choice_id) REFERENCES card_multiple_choices(id)
+)
+
+-- Represents the answers given to a multiple choice test
+DROP TABLE IF EXISTS test_multiple_choice_answers
+CREATE TABLE "test_multiple_choice_answers" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "card_multiple_choice_id" INTEGER,
+  FOREIGN KEY (card_multiple_choice_id) REFERENCES card_multiple_choices(id) 
+)

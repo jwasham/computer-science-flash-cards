@@ -140,6 +140,67 @@ def add_card():
     flash('New card was successfully added.')
     return redirect(url_for('cards'))
 
+@app.route('/test/<card_name>')
+def run_test(card_name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    # Create a new test 
+    db = get_db()
+    create_test_query = """
+    INSERT INTO test_multiple_choice (card_type_id) 
+    SELECT id 
+    FROM card_types 
+    WHERE card_name = ?
+    """
+    test_result = db.execute(create_test_query, [card_name])
+    db.commit() 
+    test_id = test_result.lastrowid
+
+    # Insert 10 questions
+    create_test_questions_query = """
+    INSERT INTO 
+        test_multiple_choice_cards (test_multiple_choice_id, card_id) 
+    SELECT 
+        test_multiple_choice.id, cards.id
+    FROM 
+        cards, card_types, test_multiple_choice
+    WHERE 
+        card_types.id = cards.type 
+    AND test_multiple_choice.card_type_id = cards.type
+    AND test_multiple_choice.id = ?
+    AND card_types.card_name = ?
+    ORDER BY RANDOM()
+    LIMIT 10
+    """
+    db.execute(create_test_questions_query, [test_id, card_name])
+    db.commit()
+
+    # Insert the randomised multiple choice ordering
+    create_test_questions_order_query = """
+    INSERT INTO test_multiple_choice_questions_order 
+        (position,
+         test_multiple_choice_card_id,
+         card_multiple_choice_id)
+    SELECT 
+        ROW_NUMBER() OVER (
+			PARTITION BY card_multiple_choices.card_id
+			ORDER BY RANDOM()
+		) as position,
+        test_multiple_choice_cards.id,
+		card_multiple_choices.id
+    FROM
+        test_multiple_choice_cards, card_multiple_choices
+    WHERE
+	card_multiple_choices.card_id = test_multiple_choice_cards.card_id
+    AND test_multiple_choice_id = ?
+	ORDER BY test_multiple_choice_cards.card_id
+    """
+    db.execute(create_test_questions_order_query, [test_id])
+    db.commit()
+
+    return render_template('multiple_choice_card_test.html')
+
 @app.route('/clear_knowns/card/<card_type>')
 def clear_knowns(card_type):
     if not session.get('logged_in'):
