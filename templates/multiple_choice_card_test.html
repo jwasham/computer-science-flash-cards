@@ -1,6 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
 
-DISPLAY TEST QUESTIONS
+    <form action="/test/submit-answers/{{ test_id }}" method="post" class="">
+        {% for question in questions %} 
+        <div>
+            <div><h2>{{ question.front }}</h2></div>
+            <div>
+                <div>
+                    <div class="form-group">
+                        {% for choice in choices[question.card_id] %}
+                        <div><input type="radio" value="{{ choice['mcId'] }}" name="{{ question.card_id }}"/> {{ choice['choice'] }} </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="form-group">
+            <button type="submit" class="saveButton btn btn-lg btn-primary">Submit</button>
+        </div>
+    </form>
 
 {% endblock %}

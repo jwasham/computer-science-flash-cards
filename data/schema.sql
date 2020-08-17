@@ -29,6 +29,7 @@ DROP TABLE IF EXISTS test_multiple_choice;
 CREATE TABLE "test_multiple_choice" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
   "card_type_id" INTEGER,
+  "created_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
   FOREIGN KEY (card_type_id) REFERENCES card_types(id)
 )
 
@@ -56,9 +57,27 @@ CREATE TABLE "test_multiple_choice_questions_order" (
 )
 
 -- Represents the answers given to a multiple choice test
-DROP TABLE IF EXISTS test_multiple_choice_answers
+DROP TABLE IF EXISTS test_multiple_choice_answers;
 CREATE TABLE "test_multiple_choice_answers" (
   "id" INTEGER PRIMARY KEY AUTOINCREMENT,
-  "card_multiple_choice_id" INTEGER,
-  FOREIGN KEY (card_multiple_choice_id) REFERENCES card_multiple_choices(id) 
+  "created_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  "test_multiple_choice_id" INTEGER,
+  "card_id" INTEGER,
+  "answer" INTEGER,
+  "correct_answer" INTEGER,
+  FOREIGN KEY (test_multiple_choice_id) REFERENCES test_multiple_choice(id),
+  FOREIGN KEY (answer) REFERENCES card_multiple_choices(id),
+  FOREIGN KEY (card_id) REFERENCES cards(id)
+)
+
+-- Represents the results from a test
+DROP TABLE IF EXISTS test_multiple_choice_results;
+CREATE TABLE "test_multiple_choice_results" (
+  "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+  "created_time" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
+  "test_multiple_choice_id" INTEGER,
+  "total_correct" INTEGER NOT NULL,
+  "total_incorrect" INTEGER NOT NULL,
+  "percentage" REAL NOT NULL,
+  FOREIGN KEY (test_multiple_choice_id) REFERENCES test_multiple_choice(id)
 )

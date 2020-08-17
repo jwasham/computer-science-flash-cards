@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import traceback
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 
@@ -140,7 +141,7 @@ def add_card():
     flash('New card was successfully added.')
     return redirect(url_for('cards'))
 
-@app.route('/test/<card_name>')
+@app.route('/test/create/<card_name>')
 def run_test(card_name):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -199,7 +200,217 @@ def run_test(card_name):
     db.execute(create_test_questions_order_query, [test_id])
     db.commit()
 
-    return render_template('multiple_choice_card_test.html')
+    return redirect('/test/sit/' + str(test_id))
+
+@app.route('/test/sit/<test_id>')
+def sit_test(test_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login')) 
+    db = get_db()
+
+    question_query = """
+    SELECT 
+        cards.id as card_id,
+        cards.front as front
+    FROM
+        test_multiple_choice,
+        test_multiple_choice_cards,
+        cards
+    WHERE 
+         test_multiple_choice_cards.card_id = cards.id
+        AND test_multiple_choice_cards.test_multiple_choice_id = test_multiple_choice.id 
+        AND test_multiple_choice.id = ?
+    """
+    questions = db.execute(question_query, [test_id])
+
+    choices_query = """
+    SELECT
+		cards.id as card_id,
+        card_multiple_choices.card_choice as choice,
+        card_multiple_choices.id as multiple_choice_id
+    FROM
+        test_multiple_choice,
+        test_multiple_choice_cards,
+        test_multiple_choice_questions_order,
+        cards,
+        card_multiple_choices
+    WHERE
+        test_multiple_choice_questions_order.test_multiple_choice_card_id = test_multiple_choice_cards.id
+        AND test_multiple_choice_cards.card_id = cards.id
+        AND test_multiple_choice_questions_order.card_multiple_choice_id = card_multiple_choices.id
+        AND test_multiple_choice_cards.test_multiple_choice_id = test_multiple_choice.id 
+        AND test_multiple_choice.id = ?
+    """
+    choices_results = db.execute(choices_query, [test_id])
+    
+    choices = {}
+    card = None
+    for choice in choices_results:
+        choice_dict = { "cardId" : choice[0], "choice" : choice[1], "mcId" : choice[2] }
+        if card != choice[0]:
+            choices[choice[0]] = [choice_dict]
+        else:
+            choices[card].append(choice_dict)
+        card = choice[0]
+
+    return render_template('multiple_choice_card_test.html', test_id=test_id, questions=questions, choices=choices)
+
+@app.route('/test/submit-answers/<test_id>', methods=['POST'])
+def test_submit_answers(test_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    db = get_db()
+    questions_query = """
+    SELECT
+        test_multiple_choice_cards.card_id as card_id,
+        card_multiple_choices.id as correct_answer
+    FROM
+        test_multiple_choice_cards,
+        card_multiple_choices
+    WHERE
+       test_multiple_choice_cards.test_multiple_choice_id = ?
+    AND test_multiple_choice_cards.card_id = card_multiple_choices.card_id
+    AND card_multiple_choices.correct_choice = 1
+    """
+    questions = db.execute(questions_query, [test_id]) 
+
+    correct_answers = 0
+    total_answers = 0
+    write_answers_query = """
+    INSERT INTO test_multiple_choice_answers(
+        test_multiple_choice_id, card_id, answer, correct_answer) 
+    VALUES (?,?,?,?)
+    """
+    for question in questions:
+        selected_answer = request.form[str(question[0])]
+        correct_answer = question[1]
+        if (int(selected_answer) == int(correct_answer)):
+            correct_answers += 1
+        total_answers += 1
+        db.execute(write_answers_query, [test_id, question[0], selected_answer, correct_answer])
+    db.commit()
+    
+    write_results_query = """
+    INSERT INTO test_multiple_choice_results(
+        test_multiple_choice_id, total_correct, total_incorrect, percentage) 
+    VALUES (?,?,?,?)
+    """ 
+    if (correct_answers == 0 or total_answers == 0):
+        percentage = 0
+    else:
+        percentage = (correct_answers / total_answers) * 100
+
+    results = [
+        test_id, 
+        correct_answers, 
+        total_answers - correct_answers, 
+        percentage
+    ]
+    db.execute(write_results_query, results)
+    db.commit()
+    
+    return redirect('/test/result/' + str(test_id))
+     
+@app.route('/test/result/<test_id>')
+def test_result(test_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login')) 
+    db = get_db() 
+    summary_query = """
+    SELECT 
+        test_multiple_choice_results.created_time as created_time,
+        test_multiple_choice_results.total_correct as total_correct,
+        test_multiple_choice_results.total_incorrect as total_incorrect,
+        test_multiple_choice_results.percentage as percentage,
+        (total_correct + total_incorrect) as total_questions
+    FROM
+        test_multiple_choice_results
+    WHERE
+        test_multiple_choice_results.test_multiple_choice_id = ?
+    """
+    summary_cursor = db.execute(summary_query, [test_id])
+    summary = summary_cursor.fetchone()
+
+    # get cards in test
+    questions_query = """
+    SELECT 
+        cards.id as card_id, 
+        cards.front as front
+    FROM test_multiple_choice_cards, cards
+    WHERE test_multiple_choice_id = ?
+    AND cards.id = test_multiple_choice_cards.card_id
+    """
+    questions = db.execute(questions_query, [test_id])
+
+    # get multiple choice questions fro this test
+    choices_query = """
+    SELECT 
+        card_multiple_choices.card_id,
+        card_multiple_choices.id as mc_id,
+        answer, 
+        correct_answer,
+        card_choice as choice
+    FROM 
+        test_multiple_choice_answers,
+        card_multiple_choices
+    WHERE 
+        test_multiple_choice_answers.test_multiple_choice_id = ?
+    AND card_multiple_choices.card_id = test_multiple_choice_answers.card_id
+    """
+    choices_results = db.execute(choices_query, [test_id])
+    choices = {}
+    card = None
+    for choice in choices_results:
+        if card != choice[0]:
+            card = choice[0]
+            choices[card] = []
+        choices[card].append({ 
+            "mcId" : choice[1], 
+            "answer" : choice[2], 
+            "correctAnswer" : choice[3],
+            "choice" : choice[4]
+        })
+
+    # answers
+    answers_query = """
+    SELECT
+       card_id, answer 
+    FROM test_multiple_choice_answers
+    WHERE test_multiple_choice_id = ?
+    """
+    answer_results = db.execute(answers_query, [test_id])
+    answers = {}
+    card = None
+    for answer in answer_results:
+        if card != answer[0]:
+            card = answer[0]
+        answers[card] = answer[1]
+
+    return render_template('multiple_choice_card_result.html', 
+            summary=summary, 
+            questions=questions, 
+            choices=choices,
+            answers=answers)
+
+@app.route('/tests/<card_name>')
+def test_results(card_name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login')) 
+    db = get_db() 
+    query = """
+    SELECT 
+        test_multiple_choice.id as test_id, 
+        test_multiple_choice.created_time,
+        card_types.card_name
+    FROM test_multiple_choice, card_types
+    WHERE
+       test_multiple_choice.card_type_id = card_types.id
+    AND
+       card_types.card_name = ?
+    """
+    tests = db.execute(query, [card_name])
+    return render_template('multiple_choice_card_tests.html', tests=tests, card_name=card_name)
 
 @app.route('/clear_knowns/card/<card_type>')
 def clear_knowns(card_type):
@@ -421,6 +632,7 @@ def mark_known(card_id, card_type):
     db.commit()
     flash('Card marked as known.')
     return redirect("/card/" + card_type)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])

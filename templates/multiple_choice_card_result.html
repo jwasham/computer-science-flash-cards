@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <h2>Test Summary</h2>
+
+    <table class="table table-bordered">
+        <tr>
+            <td><b>Date and time of test taken</b></td>
+            <td>{{ summary.created_time }}</td>
+        </tr>
+        <tr>
+            <td><b>Correct questions</b></td>
+            <td>{{ summary.total_correct }}</td>
+        </tr>
+        <tr>
+            <td><b>Incorrect questions</b></td>
+            <td>{{ summary.total_incorrect }}</td>
+        </tr>
+        <tr>
+            <td><b>Total questions</b></td>
+            <td>{{ summary.total_questions }}</td>
+        </tr>
+        <tr>
+            <td><b>Percentage</b></td>
+            <td>{{ summary.percentage }}</td>
+        </tr>
+    </table>
+
+    <h2>Test Questions</h2>
+
+    {% for question in questions %}
+    <table class="table table-bordered">
+        
+        <tr>
+            <td>Id</td>
+            <td>{{ question.card_id }}</td> 
+        </tr>
+        <tr>
+            <td>Card</td>
+            <td>{{ question.front }}</td>
+        </tr>
+        <tr>
+            <td>Multiple choices</td>
+            <td>
+                {% set ns = namespace(found=false) %}
+                {% for choice in choices[question.card_id] %}
+                    <input type="radio" value="{{ choice['mcId'] }}" name="{{ question.card_id }}" {% if choice['answer'] == answers[question.card_id] %} checked {% endif %} />
+                    {{ choice['choice'] }} <br />
+
+                    {% if choice['answer'] == choice['correctAnswer'] %}
+                    {% set ns.found = true %}
+                    {% endif %}
+                    
+                {% endfor %}
+
+                <b>{% if ns.found %} CORRECT {% else %} INCORRECT {% endif %}</b>
+            </td>
+        </tr>
+    </table>
+    <br />
+    {% endfor %}
+
+{% endblock %}

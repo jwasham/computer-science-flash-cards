@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row panel-body">
+    <h2>{{ card_name }} tests</h2>
+    <table class="table table-bordered">
+        <tr>
+            <td> Test time </td>
+            <td> View results </td>
+        </tr>
+        {% for test in tests %}
+        <tr>
+            <td>{{ test.created_time }}</td>
+            <td><a href="/test/result/{{ test.test_id }}">results</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+  
+{% endblock %}
