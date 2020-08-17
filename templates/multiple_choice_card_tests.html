@@ -5,12 +5,12 @@
     <h2>{{ card_name }} tests</h2>
     <table class="table table-bordered">
         <tr>
-            <td> Test time </td>
-            <td> View results </td>
+            <td class="col-md-2"><b>Test time</b></td>
+            <td><b>View results</b></td>
         </tr>
         {% for test in tests %}
         <tr>
-            <td>{{ test.created_time }}</td>
+            <td class="col-md-2">{{ test.created_time }}</td>
             <td><a href="/test/result/{{ test.test_id }}">results</a></td>
         </tr>
         {% endfor %}
