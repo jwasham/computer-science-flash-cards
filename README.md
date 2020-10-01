@@ -2,12 +2,12 @@
 
 This is a little website I've put together to allow me to easily make flash cards and quiz myself for memorization of:
 
-- general cs knowledge
+- General cs knowledge
     - vocabulary
     - definitions of processes
     - powers of 2
     - design patterns
-- code
+- Code
     - data structures
     - algorithms
     - solving problems
