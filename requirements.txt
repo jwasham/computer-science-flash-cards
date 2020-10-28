@@ -2,7 +2,7 @@ boto==2.40.0
 chardet==2.3.0
 click==6.7
 configparser==3.5.0
-cryptography==1.5
+cryptography==3.2
 enum34==1.1.6
 Flask==1.0
 future==0.15.2
