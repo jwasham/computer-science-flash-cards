@@ -7,6 +7,7 @@ RUN pip install --upgrade pip \
     && pip install flask gunicorn
 
 COPY entrypoint.sh /
+RUN sed -i 's/\r$//' /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 VOLUME /src/db
