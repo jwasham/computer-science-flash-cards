@@ -3,7 +3,7 @@
 
     <div class="well editPanel">
         <h2>Add a Card</h2>
-        <form action="{{ url_for('add_card') }}" method="post" class="cardForm">
+        <form action="{{ url_for('add_card') }}" method="post" class="cardForm" autocomplete="off">
             <div class="form-group">
                 <label for="general" class="toggleButton btn btn-default btn-lg">General &nbsp;
                     <input type="radio" name="type" value="1" id="general"/>
@@ -12,6 +12,16 @@
                     <input type="radio" name="type" value="2" id="code"/>
                 </label>
             </div>
+
+            <div class="form-group fieldTag">
+                <h3>Tags</h3>
+                {% for tag in tags %}
+                    <label for="{{ tag.id }}" class="btn btn-default btn-lg"> &nbsp;{{ tag.tag_name }}
+                        <input type="checkbox" name="tag[]" value="{{ tag.id }}" id="{{ tag.id }}"/>
+                    </label>
+                {% endfor %}
+            </div>
+
             <div class="form-group fieldFront">
                 <label for="front">Front of Card</label>
                 <input type="text" name="front" id="front" class="form-control">
@@ -54,6 +64,11 @@
                     <h4>
                         {{ card.front }}
                     </h4>
+                    <h5>
+                        {% for tag in card.tags %}
+                            {{ tag }},&nbsp;
+                        {% endfor %}
+                    </h5>
                     {% if card.type == 1 %}
                         {{ card.back|replace("\n", "<br />")|safe }}
                     {% else %}

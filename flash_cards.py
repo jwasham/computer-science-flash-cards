@@ -1,5 +1,6 @@
 import os
 import sqlite3
+from collections import namedtuple
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
 
@@ -11,7 +12,7 @@ app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'db', 'cards.db'),
     SECRET_KEY='development key',
     USERNAME='admin',
-    PASSWORD='default'
+    PASSWORD='ftd0000'
 ))
 app.config.from_envvar('CARDS_SETTINGS', silent=True)
 
@@ -49,10 +50,10 @@ def close_db(error):
 
 # Uncomment and use this to initialize database, then comment it
 #   You can rerun it to pave the database and start over
-# @app.route('/initdb')
-# def initdb():
-#     init_db()
-#     return 'Initialized the database.'
+@app.route('/initdb')
+def initdb():
+    init_db()
+    return 'Initialized the database.'
 
 
 @app.route('/')
@@ -67,15 +68,47 @@ def index():
 def cards():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    db = get_db()
-    query = '''
-        SELECT id, type, front, back, known
-        FROM cards
-        ORDER BY id DESC
-    '''
-    cur = db.execute(query)
-    cards = cur.fetchall()
-    return render_template('cards.html', cards=cards, filter_name="all")
+
+    with get_db() as db:
+        cards_query = '''
+            SELECT id, type, front, back, known
+            FROM cards
+            ORDER BY id DESC
+        '''
+        cur = db.execute(cards_query)
+        cards_data = cur.fetchall()
+
+        cards = []
+
+        Card = namedtuple('Card', ['id', 'type', 'front', 'back', 'known', 'tags'])
+        for card_data in cards_data:
+            card_tags_query = '''
+                SELECT t.tag_name
+                FROM tag t JOIN cards_tag ct ON ct.tag_id = t.id
+                WHERE ct.cards_id = ?
+            '''
+            cur = db.execute(card_tags_query, [card_data['id']])
+            tags_data = cur.fetchall()
+            card_tags = [t['tag_name'] for t in tags_data]
+            card = Card(
+                card_data['id'],
+                card_data['type'],
+                card_data['front'],
+                card_data['back'],
+                card_data['known'],
+                card_tags)
+            cards.append(card)
+
+        tags_query = '''
+            SELECT id, tag_name
+            FROM tag
+            ORDER BY id DESC
+        '''
+
+        cur = db.execute(tags_query)
+        tags = cur.fetchall()
+
+    return render_template('cards.html', cards=cards, tags=tags, filter_name="all")
 
 
 @app.route('/filter_cards/<filter_name>')
@@ -96,24 +129,65 @@ def filter_cards(filter_name):
     if not query:
         return redirect(url_for('cards'))
 
-    db = get_db()
-    fullquery = "SELECT id, type, front, back, known FROM cards " + query + " ORDER BY id DESC"
-    cur = db.execute(fullquery)
-    cards = cur.fetchall()
-    return render_template('cards.html', cards=cards, filter_name=filter_name)
+    with get_db() as db:
+        fullquery = "SELECT id, type, front, back, known FROM cards " + query + " ORDER BY id DESC"
+        cur = db.execute(fullquery)
+        cards_data = cur.fetchall()
+
+        cards = []
+
+        Card = namedtuple('Card', ['id', 'type', 'front', 'back', 'known', 'tags'])
+        for card_data in cards_data:
+            card_tags_query = '''
+                SELECT t.tag_name
+                FROM tag t JOIN cards_tag ct ON ct.tag_id = t.id
+                WHERE ct.cards_id = ?
+            '''
+            cur = db.execute(card_tags_query, [card_data['id']])
+            tags_data = cur.fetchall()
+            card_tags = [t['tag_name'] for t in tags_data]
+            card = Card(
+                card_data['id'],
+                card_data['type'],
+                card_data['front'],
+                card_data['back'],
+                card_data['known'],
+                card_tags)
+            cards.append(card)
+
+    tags_query = '''
+            SELECT id, tag_name
+            FROM tag
+            ORDER BY id DESC
+        '''
+
+    cur = db.execute(tags_query)
+    tags = cur.fetchall()
+    return render_template('cards.html', cards=cards, tags=tags, filter_name=filter_name)
 
 
 @app.route('/add', methods=['POST'])
 def add_card():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    db = get_db()
-    db.execute('INSERT INTO cards (type, front, back) VALUES (?, ?, ?)',
-               [request.form['type'],
-                request.form['front'],
-                request.form['back']
-                ])
-    db.commit()
+
+    with get_db() as db:
+        insert_card_query = 'INSERT INTO cards (type, front, back) VALUES (?, ?, ?)'
+        cur = db.execute(
+            insert_card_query,
+            [request.form['type'],
+            request.form['front'],
+            request.form['back']])
+
+        tags = request.form.getlist('tag[]')
+        card_id = cur.lastrowid
+        insert_card_tag_query = 'INSERT INTO cards_tag VALUES (?, ?)'
+
+        for tag_id in tags:
+            db.execute(
+                insert_card_tag_query,
+                [card_id, tag_id])
+
     flash('New card was successfully added.')
     return redirect(url_for('cards'))
 
@@ -122,15 +196,37 @@ def add_card():
 def edit(card_id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    db = get_db()
-    query = '''
-        SELECT id, type, front, back, known
-        FROM cards
-        WHERE id = ?
-    '''
-    cur = db.execute(query, [card_id])
-    card = cur.fetchone()
-    return render_template('edit.html', card=card)
+
+    Tag = namedtuple('Tag', ['id', 'tag_name', 'checked'])
+    with get_db() as db:
+        query = '''
+            SELECT id, type, front, back, known
+            FROM cards
+            WHERE id = ?
+        '''
+        cur = db.execute(query, [card_id])
+        card = cur.fetchone()
+
+        tags_query = '''
+            select t.id, t.tag_name, ct.cards_id is not null as checked
+            from tag t
+            left join cards_tag ct on ct.tag_id = t.id
+            and ct.cards_id = ?
+        '''
+
+        cur = db.execute(tags_query, card_id)
+        tags_data = cur.fetchall()
+        tags = []
+
+        for tag_data in tags_data:
+            tag = Tag(
+                tag_data['id'],
+                tag_data['tag_name'],
+                True if tag_data['checked'] else False
+            )
+            tags.append(tag)
+
+    return render_template('edit.html', card=card, tags=tags)
 
 
 @app.route('/edit_card', methods=['POST'])
@@ -139,26 +235,131 @@ def edit_card():
         return redirect(url_for('login'))
     selected = request.form.getlist('known')
     known = bool(selected)
-    db = get_db()
-    command = '''
-        UPDATE cards
-        SET
-          type = ?,
-          front = ?,
-          back = ?,
-          known = ?
-        WHERE id = ?
-    '''
-    db.execute(command,
-               [request.form['type'],
-                request.form['front'],
-                request.form['back'],
-                known,
-                request.form['card_id']
-                ])
-    db.commit()
+    tags = request.form.getlist('tag[]')
+
+    with get_db() as db:
+        command = '''
+            UPDATE cards
+            SET
+              type = ?,
+              front = ?,
+              back = ?,
+              known = ?
+            WHERE id = ?
+        '''
+        db.execute(command,
+                   [request.form['type'],
+                    request.form['front'],
+                    request.form['back'],
+                    known,
+                    request.form['card_id']
+                    ])
+
+
+        current_tags_query = '''
+            select t.id 
+            from tag t
+            join cards_tag ct on ct.tag_id = t.id
+            where ct.cards_id = ?
+        '''
+        cur = db.execute(current_tags_query,
+                         [request.form['card_id']])
+        current_tags_data = cur.fetchall()
+        cur_tags = set([t['id'] for t in current_tags_data])
+        updated_tags = set([int(t) for t in tags])
+
+        tag_ids_to_remove = list(cur_tags - updated_tags)
+        tag_ids_to_add = list(updated_tags - cur_tags)
+
+        remove_query = '''
+            delete from cards_tag
+            where cards_id = ? 
+            and tag_id = ?
+        '''
+        for tag_id in tag_ids_to_remove:
+            db.execute(remove_query,
+                       [request.form['card_id'],
+                        tag_id])
+        add_query = '''
+            insert into cards_tag values (?, ?)
+        '''
+        for tag_id in tag_ids_to_add:
+            db.execute(add_query,
+                       [request.form['card_id'],
+                        tag_id])
+
     flash('Card saved.')
     return redirect(url_for('cards'))
+
+
+@app.route('/edit_tag')
+def edit_tag():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    tags_query = '''
+                SELECT id, tag_name
+                FROM tag
+                ORDER BY id DESC
+            '''
+    with get_db() as db:
+        cur = db.execute(tags_query)
+        tags = cur.fetchall()
+    return render_template('tags.html', tags=tags)
+
+
+@app.route('/edit_tag', methods=['POST'])
+def edit_tags():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    if request.form['action'] == 'remove':
+        return redirect(url_for('delete_tag', tag_id=request.form['tag[]']))
+
+    tag_id = request.form['tag[]']
+    tag_name = request.form['tag_name']
+
+    add_query = '''
+        insert into tag (tag_name) values (?)
+    '''
+
+    update_query = '''
+        update tag set tag_name = ? where id = ?
+    '''
+    app.logger.info(tag_id)
+    with get_db() as db:
+        if tag_id == '0':
+            db.execute(
+                add_query,
+                [tag_name]
+            )
+            flash('Tag added.')
+        else:
+            db.execute(
+                update_query,
+                [tag_name,
+                 tag_id]
+            )
+            flash('Tag edited.')
+    return redirect(url_for('edit_tag'))
+
+
+@app.route('/delete_tag')
+def delete_tag():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    tag_id = request.args['tag_id']
+
+    if tag_id == '0':
+        return redirect(url_for('edit_tag'))
+
+    db = get_db()
+    db.execute('DELETE FROM tag WHERE id = ?', [tag_id])
+    db.commit()
+    flash('Tag deleted.')
+
+    return redirect(url_for('edit_tag'))
 
 
 @app.route('/delete/<card_id>')

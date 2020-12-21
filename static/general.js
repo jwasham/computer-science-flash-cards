@@ -36,6 +36,7 @@ $(document).ready(function(){
                 $('.fieldFront').hide();
                 $('.fieldBack').hide();
                 $('.saveButton').hide();
+                $('.fieldTag').hide();
             } else {
                 $('.toggleButton').removeClass('toggleSelected');
                 $(this).addClass('toggleSelected');
@@ -49,6 +50,27 @@ $(document).ready(function(){
                 $('.fieldFront').show();
                 $('.fieldBack').show();
                 $('.saveButton').show();
+                $('.fieldTag').show();
+            }
+        }
+
+        $('.toggleButton').click(checkit);
+
+        checkit();
+    }
+
+    if ($('.tagPanel').length != 0) {
+
+        function checkit() {
+            var checkedVal = $('input[name="tag[]"]:checked').val();
+            if (checkedVal === undefined) {
+                // hide the fields
+                $('.fieldTagName').hide();
+            } else {
+                $('.toggleButton').removeClass('toggleSelected');
+                $(this).addClass('toggleSelected');
+
+                $('.fieldTagName').show();
             }
         }
 

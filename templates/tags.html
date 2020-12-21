@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="well tagPanel">
+        <h2>Edit Tags</h2>
+        <form action="{{ url_for('edit_tag') }}" method="post" class="tagForm" autocomplete="off">
+
+            <div class="form-group fieldTag">
+                <h3>Tags</h3>
+                {% for tag in tags %}
+                    <label for="{{ tag.id }}" class="toggleButton btn btn-default btn-lg"> &nbsp;{{ tag.tag_name }}
+                        <input type="radio" name="tag[]" value="{{ tag.id }}" id="{{ tag.id }}"/>
+                    </label>
+                {% endfor %}
+                <label for="tag_new" class="toggleButton btn btn-default btn-lg"> &nbsp;new
+                    <input type="radio" name="tag[]" value="0" id="tag_new"/>
+                </label>
+            </div>
+
+
+            <div class="form-group fieldTagName">
+                <label for="tag_name">Tag name</label>
+                <input type="text" name="tag_name" id="tag_name" class="form-control" value="">
+            </div>
+
+            <div class="row">
+                <div class="col-xs-6 text-right">
+{#                    <a href="{{ url_for('delete_tag') }}" class="btn btn-danger btn-xs">#}
+{#                        <i class="fa fa-trash"></i>#}
+{#                        Remove#}
+{#                    </a>#}
+                    <button type="submit" name="action" class="btn btn-danger btn-xs" value="remove"><i class="fa fa-trash"></i>
+                        Remove</button>
+                </div>
+            </div>
+
+            <hr />
+            <div class="form-group">
+{#                <input type="hidden" name="card_id" value="{{ card.id|e }}" />#}
+                <button type="submit" class="saveButton btn btn-lg btn-primary" name="action" value="edit">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
