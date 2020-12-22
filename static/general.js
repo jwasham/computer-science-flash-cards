@@ -79,6 +79,19 @@ $(document).ready(function(){
         checkit();
     }
 
+
+    var md = window.markdownit();
+
+    if ($('.answer').length != 0) {
+        var content = $('.answer').text();
+        $('.answer').html(
+            md.render(content.trim())
+        );
+        console.log(content.trim());
+        console.log(md.render(content));
+
+    }
+
     // to remove the short delay on click on touch devices
     FastClick.attach(document.body);
 });

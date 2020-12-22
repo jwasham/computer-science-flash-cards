@@ -48,3 +48,8 @@ textarea {
 .navbar-right {
   float: right!important;
 }
+
+.answer {
+    width:fit-content;
+    margin: 0 auto;
+}

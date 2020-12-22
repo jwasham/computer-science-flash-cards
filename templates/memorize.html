@@ -38,17 +38,20 @@
                 <div class="panel-body">
                     <div class="alignContainer">
                         <div class="alignMiddle frontText">
-                            {% if card.type == 1 %}
-                                {% if short_answer %}
-                                    <div class="text-center largerText">
-                                {% endif %}
-                                    {{ card.back|replace("\n", "<br />")|safe }}
-                                {% if short_answer %}
-                                    </div>
-                                {% endif %}
-                            {% else %}
-                                <pre><code>{{ card.back|escape }}</code></pre>
-                            {% endif %}
+{#                            {% if card.type == 1 %}#}
+{#                                {% if short_answer %}#}
+{#                                    <div class="text-center largerText answer">#}
+{#                                {% endif %}#}
+{#                                    {{ card.back|replace("\n", "<br />")|safe }}#}
+{#                                {% if short_answer %}#}
+{#                                    </div>#}
+{#                                {% endif %}#}
+{#                            {% else %}#}
+{#                                <pre><code>{{ card.back|escape }}</code></pre>#}
+{#                            {% endif %}#}
+                            <div class="answer {{ 'largerText' if short_answer else '' }}">
+                                {{ card.back|replace("\n", "<br />")|safe }}
+                            </div>
                         </div>
                     </div>
                 </div>

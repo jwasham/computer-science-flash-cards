@@ -52,6 +52,9 @@ def close_db(error):
 #   You can rerun it to pave the database and start over
 @app.route('/initdb')
 def initdb():
+    db_path = os.path.join('db', 'cards.db')
+    if os.path.exists(db_path):
+        return 'db exists.'
     init_db()
     return 'Initialized the database.'
 
@@ -214,7 +217,7 @@ def edit(card_id):
             and ct.cards_id = ?
         '''
 
-        cur = db.execute(tags_query, card_id)
+        cur = db.execute(tags_query, [card_id])
         tags_data = cur.fetchall()
         tags = []
 
