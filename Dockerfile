@@ -1,5 +1,5 @@
-FROM python:3.5
-MAINTAINER Tinpee <tinpee.dev@gmail.com>
+FROM python:3.9
+LABEL maintainer="Tinpee <tinpee.dev@gmail.com>"
 
 ADD . /src
 WORKDIR /src
@@ -14,5 +14,3 @@ VOLUME /src/db
 
 EXPOSE 8000
 CMD ["/entrypoint.sh"]
-
-
