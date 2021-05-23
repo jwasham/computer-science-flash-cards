@@ -14,39 +14,31 @@
         </form>
     </div>
 
-    <!-- <div class="page-header">
-        <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
+    <div class="page-header">
+        <h2>{{ tags|length }} Tag{{ '' if (tags|length == 1) else 's' }}</h2>
     </div>
     <br />
     <br />
 
     <table class="table table-bordered">
-        {% for card in cards %}
+        {% for tag in tags %}
             <tr>
                 <td>
-                    <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a href="{{ url_for('editTag', tag_id=tag.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                 </td>
-                <td class="cardContent">
+                <td class="tagContent">
                     <h4>
-                        {{ card.front }}
+                        {{ tag.tagName }}
                     </h4>
-                    {% if card.type == 1 %}
-                        {{ card.back|replace("\n", "<br />")|safe }}
-                    {% else %}
-                        <pre><code>{{ card.back|escape }}</code></pre>
-                    {% endif %}
                 </td>
             </tr>
         {% else %}
             <tr>
                 <td>
-                    <em>No cards to show.</em>
+                    <em>No tags to show.</em>
                 </td>
             </tr>
         {% endfor %}
-    </table> -->
-
-
-
+    </table>
 
 {% endblock %}
