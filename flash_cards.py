@@ -49,10 +49,10 @@ def close_db(error):
 
 # Uncomment and use this to initialize database, then comment it
 #   You can rerun it to pave the database and start over
-# @app.route('/initdb')
-# def initdb():
-#     init_db()
-#     return 'Initialized the database.'
+@app.route('/initdb')
+def initdb():
+    init_db()
+    return 'Initialized the database.'
 
 
 @app.route('/')
@@ -275,6 +275,31 @@ def logout():
     session.pop('logged_in', None)
     flash("You've logged out")
     return redirect(url_for('index'))
+
+@app.route('/tags')
+def tags():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    query = '''
+        SELECT id, tagName
+        FROM tags
+        ORDER BY id DESC
+    '''
+    cur = db.execute(query)
+    tags = cur.fetchall()
+    return render_template('tags.html', tags=tags, filter_name="all")
+
+@app.route('/addTag', methods=['POST'])
+def add_tag():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('INSERT INTO tags (tagName) VALUES (?)',
+               [request.form['tagName']])
+    db.commit()
+    flash('New tag was successfully added.')
+    return redirect(url_for('tags'))
 
 
 if __name__ == '__main__':
