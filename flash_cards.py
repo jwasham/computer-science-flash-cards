@@ -301,6 +301,38 @@ def add_tag():
     flash('New tag was successfully added.')
     return redirect(url_for('tags'))
 
+@app.route('/editTag/<tag_id>')
+def editTag(tag_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    query = '''
+        SELECT id, tagName
+        FROM tags
+        WHERE id = ?
+    '''
+    cur = db.execute(query, [tag_id])
+    tag = cur.fetchone()
+    return render_template('editTag.html', tag=tag)
+
+@app.route('/edit_tag', methods=['POST'])
+def edit_tag():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    command = '''
+        UPDATE tags
+        SET
+          tagName = ?
+        WHERE id = ?
+    '''
+    db.execute(command,
+               [request.form['tagName'],
+                request.form['tag_id']
+                ])
+    db.commit()
+    flash('Tag saved.')
+    return redirect(url_for('tags'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
