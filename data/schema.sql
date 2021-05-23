@@ -6,3 +6,8 @@ create table cards (
   back text not null,
   known boolean default 0
 );
+
+create table tags (
+  id integer primary key autoincrement,
+  tagName text not null
+);
