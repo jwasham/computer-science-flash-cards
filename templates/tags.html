@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="well editPanelTag">
+        <h2>Add a Tag</h2>
+        <form action="{{ url_for('add_tag') }}" method="post" class="tagForm">
+            <div class="form-group fieldTagName">
+                <label for="tagName">Tag name</label>
+                <input type="text" name="tagName" id="tagName" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="saveButton btn btn-lg btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- <div class="page-header">
+        <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
+    </div>
+    <br />
+    <br />
+
+    <table class="table table-bordered">
+        {% for card in cards %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </td>
+                <td class="cardContent">
+                    <h4>
+                        {{ card.front }}
+                    </h4>
+                    {% if card.type == 1 %}
+                        {{ card.back|replace("\n", "<br />")|safe }}
+                    {% else %}
+                        <pre><code>{{ card.back|escape }}</code></pre>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>
+                    <em>No cards to show.</em>
+                </td>
+            </tr>
+        {% endfor %}
+    </table> -->
+
+
+
+
+{% endblock %}
