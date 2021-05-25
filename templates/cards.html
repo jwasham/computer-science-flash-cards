@@ -11,6 +11,11 @@
                 <label for="code" class="toggleButton btn btn-default btn-lg">Code &nbsp;
                     <input type="radio" name="type" value="2" id="code"/>
                 </label>
+                {% for tag in tags %}
+                <label for={{tag.tagName}} class="toggleButton btn btn-default btn-lg">{{tag.tagName}} &nbsp;
+                    <input type="radio" name="type" value={{tag.id}} id={{tag.tagName}}/>
+                </label>
+                {% endfor %}
             </div>
             <div class="form-group fieldFront">
                 <label for="front">Front of Card</label>
