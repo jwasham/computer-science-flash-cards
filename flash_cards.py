@@ -75,7 +75,8 @@ def cards():
     '''
     cur = db.execute(query)
     cards = cur.fetchall()
-    return render_template('cards.html', cards=cards, filter_name="all")
+    tags = getAllTag()
+    return render_template('cards.html', cards=cards, tags=tags, filter_name="all")
 
 
 @app.route('/filter_cards/<filter_name>')
@@ -97,7 +98,8 @@ def filter_cards(filter_name):
         return redirect(url_for('cards'))
 
     db = get_db()
-    fullquery = "SELECT id, type, front, back, known FROM cards " + query + " ORDER BY id DESC"
+    fullquery = "SELECT id, type, front, back, known FROM cards " + \
+        query + " ORDER BY id DESC"
     cur = db.execute(fullquery)
     cards = cur.fetchall()
     return render_template('cards.html', cards=cards, filter_name=filter_name)
@@ -276,8 +278,8 @@ def logout():
     flash("You've logged out")
     return redirect(url_for('index'))
 
-@app.route('/tags')
-def tags():
+
+def getAllTag():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
@@ -288,7 +290,16 @@ def tags():
     '''
     cur = db.execute(query)
     tags = cur.fetchall()
+    return tags
+
+
+@app.route('/tags')
+def tags():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    tags = getAllTag()
     return render_template('tags.html', tags=tags, filter_name="all")
+
 
 @app.route('/addTag', methods=['POST'])
 def add_tag():
@@ -300,6 +311,7 @@ def add_tag():
     db.commit()
     flash('New tag was successfully added.')
     return redirect(url_for('tags'))
+
 
 @app.route('/editTag/<tag_id>')
 def edit_tag(tag_id):
@@ -314,6 +326,7 @@ def edit_tag(tag_id):
     cur = db.execute(query, [tag_id])
     tag = cur.fetchone()
     return render_template('editTag.html', tag=tag)
+
 
 @app.route('/updateTag', methods=['POST'])
 def update_tag():
@@ -333,6 +346,7 @@ def update_tag():
     db.commit()
     flash('Tag saved.')
     return redirect(url_for('tags'))
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
