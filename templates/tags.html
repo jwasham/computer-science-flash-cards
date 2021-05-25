@@ -24,7 +24,7 @@
         {% for tag in tags %}
             <tr>
                 <td>
-                    <a href="{{ url_for('editTag', tag_id=tag.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                    <a href="{{ url_for('edit_tag', tag_id=tag.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                 </td>
                 <td class="tagContent">
                     <h4>

@@ -302,7 +302,7 @@ def add_tag():
     return redirect(url_for('tags'))
 
 @app.route('/editTag/<tag_id>')
-def editTag(tag_id):
+def edit_tag(tag_id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
@@ -315,8 +315,8 @@ def editTag(tag_id):
     tag = cur.fetchone()
     return render_template('editTag.html', tag=tag)
 
-@app.route('/edit_tag', methods=['POST'])
-def edit_tag():
+@app.route('/updateTag', methods=['POST'])
+def update_tag():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
