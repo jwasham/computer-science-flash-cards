@@ -40,11 +40,11 @@ $(document).ready(function(){
                 $('.toggleButton').removeClass('toggleSelected');
                 $(this).addClass('toggleSelected');
 
-                if (checkedVal == '1') {
-                    $('textarea[name=back]').attr('rows', 5);
-                } else {
-                    $('textarea[name=back]').attr('rows', 12);
-                }
+                // if (checkedVal == '1') {
+                //     $('textarea[name=back]').attr('rows', 5);
+                // } else {
+                //     $('textarea[name=back]').attr('rows', 12);
+                // }
 
                 $('.fieldFront').show();
                 $('.fieldBack').show();
