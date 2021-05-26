@@ -28,7 +28,6 @@ def init_db():
         db.cursor().executescript(f.read())
     db.commit()
 
-
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -52,6 +51,7 @@ def close_db(error):
 @app.route('/initdb')
 def initdb():
     init_db()
+    init_tag()
     return 'Initialized the database.'
 
 
@@ -346,6 +346,17 @@ def update_tag():
     db.commit()
     flash('Tag saved.')
     return redirect(url_for('tags'))
+
+def init_tag():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('INSERT INTO tags (tagName) VALUES (?)',
+               ["general"])
+    db.commit()
+    db.execute('INSERT INTO tags (tagName) VALUES (?)',
+               ["code"])
+    db.commit()
 
 
 if __name__ == '__main__':
