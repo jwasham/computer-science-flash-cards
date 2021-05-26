@@ -13,7 +13,7 @@
                 </label>
                 {% for tag in tags %}
                 <label for={{tag.tagName}} class="toggleButton btn btn-default btn-lg">{{tag.tagName}} &nbsp;
-                    <input type="radio" name="type" value={{tag.id}} id={{tag.tagName}}/>
+                    <input type="radio" name="type" value={{tag.id}} id={{tag.tagName}}>
                 </label>
                 {% endfor %}
             </div>
