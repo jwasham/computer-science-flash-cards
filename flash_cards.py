@@ -94,6 +94,9 @@ def filter_cards(filter_name):
     }
 
     query = filters.get(filter_name)
+    if(query is None):
+        query = "where type = {0}".format(filter_name)
+        filter_name = int(filter_name)
 
     if not query:
         return redirect(url_for('show'))
