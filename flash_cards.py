@@ -2,6 +2,7 @@ import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
+import logging
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -95,14 +96,15 @@ def filter_cards(filter_name):
     query = filters.get(filter_name)
 
     if not query:
-        return redirect(url_for('cards'))
+        return redirect(url_for('show'))
 
     db = get_db()
     fullquery = "SELECT id, type, front, back, known FROM cards " + \
         query + " ORDER BY id DESC"
     cur = db.execute(fullquery)
     cards = cur.fetchall()
-    return render_template('cards.html', cards=cards, filter_name=filter_name)
+    tags = getAllTag()
+    return render_template('show.html', cards=cards, tags=tags, filter_name=filter_name)
 
 
 @app.route('/add', methods=['POST'])
@@ -358,6 +360,20 @@ def init_tag():
                ["code"])
     db.commit()
 
+@app.route('/show')
+def show():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    query = '''
+        SELECT id, type, front, back, known
+        FROM cards
+        ORDER BY id DESC
+    '''
+    cur = db.execute(query)
+    cards = cur.fetchall()
+    tags = getAllTag()
+    return render_template('show.html', cards=cards, tags=tags, filter_name="all")
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
