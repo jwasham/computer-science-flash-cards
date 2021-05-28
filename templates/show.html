@@ -7,7 +7,7 @@
 <div class="btn-group btn-group-md" role="group" aria-label="filters">
     <a href="{{ url_for('filter_cards', filter_name="all") }}" class="btn btn-{{ "primary" if filter_name == "all" else "default" }}">all</a>
     {% for tag in tags %}
-        <a href="{{ url_for('filter_cards', filter_name=tag.tagName) }}" class="btn btn-{{ "primary" if filter_name == tag.tagName else "default" }}">{{tag.tagName}}</a>
+        <a href="{{ url_for('filter_cards', filter_name=tag.id) }}" class="btn btn-{{ "primary" if filter_name == tag.id else "default" }}">{{tag.tagName}}</a>
     {% endfor %}
     <!-- <a href="{{ url_for('filter_cards', filter_name="general") }}" class="btn btn-{{ "primary" if filter_name == "general" else "default" }}">General</a>
     <a href="{{ url_for('filter_cards', filter_name="code") }}" class="btn btn-{{ "primary" if filter_name == "code" else "default" }}">Code</a> -->
