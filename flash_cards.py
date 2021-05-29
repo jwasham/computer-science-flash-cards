@@ -178,29 +178,6 @@ def delete(card_id):
     flash('Card deleted.')
     return redirect(url_for('cards'))
 
-
-@app.route('/general')
-@app.route('/general/<card_id>')
-def general(card_id=None):
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return mem("1", card_id)
-
-
-@app.route('/code')
-@app.route('/code/<card_id>')
-def code(card_id=None):
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return memorize("code", card_id)
-
-@app.route('/test')
-@app.route('/test/<card_id>')
-def test(card_id=None):
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return memorize("test", card_id)
-
 @app.route('/mem')
 @app.route('/mem/<card_id>')
 @app.route('/mem/<card_type>')
@@ -289,8 +266,7 @@ def mark_known(card_id, card_type):
     db.execute('UPDATE cards SET known = 1 WHERE id = ?', [card_id])
     db.commit()
     flash('Card marked as known.')
-    return redirect(url_for(card_type))
-
+    return redirect(url_for('mem', card_type=card_type))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
