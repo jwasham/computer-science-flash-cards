@@ -2,20 +2,23 @@ import os
 import sqlite3
 from flask import Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash
-import logging
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+nameDB='cards.db'
+pathDB='db'
 
-# Load default config and override config from an environment variable
-app.config.update(dict(
-    DATABASE=os.path.join(app.root_path, 'db', 'cards.db'),
-    SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='default'
-))
-app.config.from_envvar('CARDS_SETTINGS', silent=True)
+def load_config():
+    app.config.update(dict(
+        DATABASE=os.path.join(app.root_path, pathDB, nameDB),
+        SECRET_KEY='development key',
+        USERNAME='admin',
+        PASSWORD='default'
+    ))
+    app.config.from_envvar('CARDS_SETTINGS', silent=True)
 
+if __name__ == "__main__":
+    load_config()
 
 def connect_db():
     rv = sqlite3.connect(app.config['DATABASE'])
@@ -59,7 +62,7 @@ def initdb():
 @app.route('/')
 def index():
     if session.get('logged_in'):
-        return redirect(url_for('memorize', card_type="1"))
+        return redirect(url_for('list_db'))
     else:
         return redirect(url_for('login'))
 
@@ -258,7 +261,7 @@ def login():
         else:
             session['logged_in'] = True
             session.permanent = True  # stay logged in
-            return redirect(url_for('cards'))
+            return redirect(url_for('index'))
     return render_template('login.html', error=error)
 
 
@@ -373,6 +376,24 @@ def bookmark(card_type, card_id):
     db.commit()
     flash('Card saved.')
     return redirect(url_for('memorize', card_type=card_type))
+
+@app.route('/list_db')
+def list_db():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    dbs = [f for f in os.listdir(pathDB) if os.path.isfile(os.path.join(pathDB, f))]
+    dbs = list(filter(lambda k: '.db' in k, dbs))
+    return render_template('list_db.html', dbs=dbs)
+
+@app.route('/load_db/<name>')
+def load_db(name):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    global nameDB
+    nameDB=name
+    load_config()
+    return redirect(url_for('memorize', card_type="1"))
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
