@@ -4,8 +4,11 @@
     <div class="row">
         <div class="col-xs-12 text-center">
             <div class="btn-group btn-group-lg" role="group" aria-label="card type">
-                <a href="{{ url_for('general') }}" class="btn btn-{{ "primary" if card_type == "general" else "default" }}">General</a>
-                <a href="{{ url_for('code') }}" class="btn btn-{{ "primary" if card_type == "code" else "default" }}">Code</a>
+                <!-- <a href="{{ url_for('general') }}" class="btn btn-{{ "primary" if card_type == "general" else "default" }}">General</a>
+                <a href="{{ url_for('code') }}" class="btn btn-{{ "primary" if card_type == "code" else "default" }}">Code</a> -->
+                {% for tag in tags %}
+                    <a href="{{ url_for('mem', card_type=tag.id) }}" class="btn btn-{{ "primary" if card_type == tag.id else "default" }}">{{tag.tagName}}</a>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -81,7 +84,7 @@
             </a>
             &nbsp;
             &nbsp;
-            <a href="{{ url_for(card_type) }}" class="btn btn-primary btn-lg">
+            <a href="{{ url_for('mem', card_type=card_type) }}" class="btn btn-primary btn-lg">
                 Next Card
                 <i class="fa fa-arrow-right"></i>
             </a>
@@ -92,7 +95,7 @@
             <br />
             <br />
             <br />
-            <a href="{{ url_for(card_type, card_id=card.id) }}" class="btn btn-default btn-sm">
+            <a href="{{ url_for('mem', card_id=card.id) }}" class="btn btn-default btn-sm">
                 <i class="fa fa-bookmark"></i>
                 bookmark this card (#{{ card.id }})
             </a>
