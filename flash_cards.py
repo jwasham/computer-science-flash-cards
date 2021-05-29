@@ -59,7 +59,7 @@ def initdb():
 @app.route('/')
 def index():
     if session.get('logged_in'):
-        return redirect(url_for('mem', card_type="1"))
+        return redirect(url_for('memorize', card_type="1"))
     else:
         return redirect(url_for('login'))
 
@@ -179,10 +179,10 @@ def delete(card_id):
     flash('Card deleted.')
     return redirect(url_for('cards'))
 
-@app.route('/mem')
-@app.route('/mem/<card_id>')
-@app.route('/mem/<card_type>')
-def mem(card_type, card_id=None):
+@app.route('/memorize')
+@app.route('/memorize/<card_id>')
+@app.route('/memorize/<card_type>')
+def memorize(card_type, card_id=None):
     tag = getTag(card_type)
     if tag is None:
         return redirect(url_for('cards'))
@@ -197,28 +197,6 @@ def mem(card_type, card_id=None):
     short_answer = (len(card['back']) < 75)
     tags = getAllTag()
     card_type = int(card_type)
-    return render_template('memorize.html',
-                           card=card,
-                           card_type=card_type,
-                           short_answer=short_answer, tags=tags)
-
-def memorize(card_type, card_id):
-    if card_type == "general":
-        type = 1
-    elif card_type == "code":
-        type = 2
-    else:
-        return redirect(url_for('cards'))
-
-    if card_id:
-        card = get_card_by_id(card_id)
-    else:
-        card = get_card(type)
-    if not card:
-        flash("You've learned all the " + card_type + " cards.")
-        return redirect(url_for('cards'))
-    short_answer = (len(card['back']) < 75)
-    tags = getAllTag()
     return render_template('memorize.html',
                            card=card,
                            card_type=card_type,
@@ -267,7 +245,7 @@ def mark_known(card_id, card_type):
     db.execute('UPDATE cards SET known = 1 WHERE id = ?', [card_id])
     db.commit()
     flash('Card marked as known.')
-    return redirect(url_for('mem', card_type=card_type))
+    return redirect(url_for('memorize', card_type=card_type))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -370,14 +348,6 @@ def init_tag():
 def show():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    db = get_db()
-    # query = '''
-    #     SELECT id, type, front, back, known
-    #     FROM cards
-    #     ORDER BY id DESC
-    # '''
-    # cur = db.execute(query)
-    # cards = cur.fetchall()
     tags = getAllTag()
     return render_template('show.html', tags=tags, filter_name="")
 
@@ -402,7 +372,7 @@ def bookmark(card_type, card_id):
     db.execute('UPDATE cards SET type = ? WHERE id = ?',[card_type,card_id])
     db.commit()
     flash('Card saved.')
-    return redirect(url_for('mem', card_type=card_type))
+    return redirect(url_for('memorize', card_type=card_type))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
