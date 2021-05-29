@@ -137,7 +137,8 @@ def edit(card_id):
     '''
     cur = db.execute(query, [card_id])
     card = cur.fetchone()
-    return render_template('edit.html', card=card)
+    tags = getAllTag()
+    return render_template('edit.html', card=card, tags=tags)
 
 
 @app.route('/edit_card', methods=['POST'])
@@ -165,7 +166,7 @@ def edit_card():
                 ])
     db.commit()
     flash('Card saved.')
-    return redirect(url_for('cards'))
+    return redirect(url_for('show'))
 
 
 @app.route('/delete/<card_id>')
@@ -191,8 +192,8 @@ def mem(card_type, card_id=None):
     else:
         card = get_card(card_type)
     if not card:
-        flash("You've learned all the " + card_type + " cards.")
-        return redirect(url_for('cards'))
+        flash("You've learned all the '" + tag[1] + "' cards.")
+        return redirect(url_for('show'))
     short_answer = (len(card['back']) < 75)
     tags = getAllTag()
     card_type = int(card_type)
@@ -328,14 +329,6 @@ def add_tag():
 def edit_tag(tag_id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    # db = get_db()
-    # query = '''
-    #     SELECT id, tagName
-    #     FROM tags
-    #     WHERE id = ?
-    # '''
-    # cur = db.execute(query, [tag_id])
-    # tag = cur.fetchone()
     tag = getTag(tag_id)
     return render_template('editTag.html', tag=tag)
 
