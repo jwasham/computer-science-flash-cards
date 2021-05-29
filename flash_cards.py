@@ -59,7 +59,7 @@ def initdb():
 @app.route('/')
 def index():
     if session.get('logged_in'):
-        return redirect(url_for('general'))
+        return redirect(url_for('mem', card_type="1"))
     else:
         return redirect(url_for('login'))
 
@@ -184,7 +184,7 @@ def delete(card_id):
 def general(card_id=None):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    return memorize("general", card_id)
+    return mem("1", card_id)
 
 
 @app.route('/code')
@@ -194,6 +194,35 @@ def code(card_id=None):
         return redirect(url_for('login'))
     return memorize("code", card_id)
 
+@app.route('/test')
+@app.route('/test/<card_id>')
+def test(card_id=None):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return memorize("test", card_id)
+
+@app.route('/mem')
+@app.route('/mem/<card_id>')
+@app.route('/mem/<card_type>')
+def mem(card_type, card_id=None):
+    tag = getTag(card_type)
+    if tag is None:
+        return redirect(url_for('cards'))
+
+    if card_id:
+        card = get_card_by_id(card_id)
+    else:
+        card = get_card(card_type)
+    if not card:
+        flash("You've learned all the " + card_type + " cards.")
+        return redirect(url_for('cards'))
+    short_answer = (len(card['back']) < 75)
+    tags = getAllTag()
+    card_type = int(card_type)
+    return render_template('memorize.html',
+                           card=card,
+                           card_type=card_type,
+                           short_answer=short_answer, tags=tags)
 
 def memorize(card_type, card_id):
     if card_type == "general":
@@ -211,10 +240,11 @@ def memorize(card_type, card_id):
         flash("You've learned all the " + card_type + " cards.")
         return redirect(url_for('cards'))
     short_answer = (len(card['back']) < 75)
+    tags = getAllTag()
     return render_template('memorize.html',
                            card=card,
                            card_type=card_type,
-                           short_answer=short_answer)
+                           short_answer=short_answer, tags=tags)
 
 
 def get_card(type):
@@ -291,7 +321,7 @@ def getAllTag():
     query = '''
         SELECT id, tagName
         FROM tags
-        ORDER BY id DESC
+        ORDER BY id ASC
     '''
     cur = db.execute(query)
     tags = cur.fetchall()
@@ -322,14 +352,15 @@ def add_tag():
 def edit_tag(tag_id):
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    db = get_db()
-    query = '''
-        SELECT id, tagName
-        FROM tags
-        WHERE id = ?
-    '''
-    cur = db.execute(query, [tag_id])
-    tag = cur.fetchone()
+    # db = get_db()
+    # query = '''
+    #     SELECT id, tagName
+    #     FROM tags
+    #     WHERE id = ?
+    # '''
+    # cur = db.execute(query, [tag_id])
+    # tag = cur.fetchone()
+    tag = getTag(tag_id)
     return render_template('editTag.html', tag=tag)
 
 
@@ -377,6 +408,19 @@ def show():
     cards = cur.fetchall()
     tags = getAllTag()
     return render_template('show.html', cards=cards, tags=tags, filter_name="all")
+
+def getTag(tag_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    query = '''
+        SELECT id, tagName
+        FROM tags
+        WHERE id = ?
+    '''
+    cur = db.execute(query, [tag_id])
+    tag = cur.fetchone()
+    return tag
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
