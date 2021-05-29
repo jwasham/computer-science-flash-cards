@@ -362,6 +362,9 @@ def init_tag():
     db.execute('INSERT INTO tags (tagName) VALUES (?)',
                ["code"])
     db.commit()
+    db.execute('INSERT INTO tags (tagName) VALUES (?)',
+               ["bookmark"])
+    db.commit()
 
 @app.route('/show')
 def show():
@@ -390,6 +393,16 @@ def getTag(tag_id):
     cur = db.execute(query, [tag_id])
     tag = cur.fetchone()
     return tag
+
+@app.route('/bookmark/<card_type>/<card_id>')
+def bookmark(card_type, card_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('UPDATE cards SET type = ? WHERE id = ?',[card_type,card_id])
+    db.commit()
+    flash('Card saved.')
+    return redirect(url_for('mem', card_type=card_type))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
