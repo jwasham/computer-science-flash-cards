@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<table class="table table-bordered">
+    {% for db in dbs %}
+        <tr>
+            <td>
+                <a href="{{ url_for('load_db', name=db) }}" class="btn btn-lg btn-primary">Load</a>
+            </td>
+            <td class="dbContent">
+                <h4>
+                    {{ db }}
+                </h4>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                <em>No dbs to show.</em>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
