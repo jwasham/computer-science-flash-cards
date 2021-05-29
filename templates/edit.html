@@ -1,17 +1,24 @@
 {% extends "layout.html" %}
 {% block body %}
-    <div class="well">
+    <div class="well editPanel">
         <h2>Edit Card #{{ card.id }}</h2>
         <form action="{{ url_for('edit_card') }}" method="post" class="cardForm">
 
             <div class="form-group">
-                <label for="general" class="btn btn-default btn-lg">General &nbsp;
+                {% for tag in tags %}
+                    <label for={{tag.tagName}} class="toggleButton btn btn-default btn-lg">{{tag.tagName}} &nbsp;
+                        <input type="radio" name="type" value={{tag.id}}
+                            id={{tag.tagName}} {{ "checked" if (card.type == tag.id) else "" }} />
+                    </label>
+                {% endfor %}
+
+                <!-- <label for="general" class="btn btn-default btn-lg">General &nbsp;
                     <input type="radio" name="type" value="1"
                            id="general" {{ "checked" if (card.type == 1) else "" }} />
                 </label>
                 <label for="code" class="btn btn-default btn-lg">Code &nbsp;
                     <input type="radio" name="type" value="2" id="code" {{ "checked" if (card.type == 2) else "" }} />
-                </label>
+                </label> -->
             </div>
             <div class="form-group">
                 <label for="front">Front of Card</label>
