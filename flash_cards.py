@@ -368,15 +368,15 @@ def show():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     db = get_db()
-    query = '''
-        SELECT id, type, front, back, known
-        FROM cards
-        ORDER BY id DESC
-    '''
-    cur = db.execute(query)
-    cards = cur.fetchall()
+    # query = '''
+    #     SELECT id, type, front, back, known
+    #     FROM cards
+    #     ORDER BY id DESC
+    # '''
+    # cur = db.execute(query)
+    # cards = cur.fetchall()
     tags = getAllTag()
-    return render_template('show.html', cards=cards, tags=tags, filter_name="all")
+    return render_template('show.html', tags=tags, filter_name="")
 
 def getTag(tag_id):
     if not session.get('logged_in'):
