@@ -47,18 +47,6 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
-
-# -----------------------------------------------------------
-
-# Uncomment and use this to initialize database, then comment it
-#   You can rerun it to pave the database and start over
-@app.route('/initdb')
-def initdb():
-    init_db()
-    init_tag()
-    return 'Initialized the database.'
-
-
 @app.route('/')
 def index():
     if session.get('logged_in'):
@@ -383,7 +371,7 @@ def list_db():
         return redirect(url_for('login'))
     dbs = [f for f in os.listdir(pathDB) if os.path.isfile(os.path.join(pathDB, f))]
     dbs = list(filter(lambda k: '.db' in k, dbs))
-    return render_template('list_db.html', dbs=dbs)
+    return render_template('listDb.html', dbs=dbs)
 
 @app.route('/load_db/<name>')
 def load_db(name):
@@ -394,6 +382,22 @@ def load_db(name):
     load_config()
     return redirect(url_for('memorize', card_type="1"))
 
+@app.route('/create_db')
+def create_db():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('createDb.html')
+
+@app.route('/init', methods=['POST'])
+def init():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    global nameDB
+    nameDB = request.form['dbName'] + '.db'
+    load_config()
+    init_db()
+    init_tag()
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
