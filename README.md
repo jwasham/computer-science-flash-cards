@@ -6,6 +6,7 @@ This fork repository has been updated with the following features:
 - Choose to load the database
 - Init database with UI
 - Bookmark card will be added to the tag "bookmark"
+- Can load old database hasn't been tagged yet
 
 *-------------------- __Origin README__ --------------------*
 
