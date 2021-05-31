@@ -1,5 +1,14 @@
 # Computer Science Flash Cards
 
+This fork repository has been updated with the following features:
+- Create tag (type "general" and "code" will be auto add to tag table when init project)
+- Filter & memorize card by tag
+- Choose to load the database
+- Init database with UI
+- Bookmark card will be added to the tag "bookmark"
+
+*-------------------- __Origin README__ --------------------*
+
 This is a little website I've put together to allow me to easily make flash cards and quiz myself for memorization of:
 
 - General cs knowledge
