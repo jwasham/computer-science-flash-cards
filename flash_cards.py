@@ -380,6 +380,7 @@ def load_db(name):
     global nameDB
     nameDB=name
     load_config()
+    handle_old_schema()
     return redirect(url_for('memorize', card_type="1"))
 
 @app.route('/create_db')
@@ -398,6 +399,26 @@ def init():
     init_db()
     init_tag()
     return redirect(url_for('index'))
+
+def check_table_tag_exists():
+    db = get_db()
+    cur = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tags'")
+    result = cur.fetchone()
+    print("Table tag : ",result)
+    return result
+
+def create_tag_table():
+    db = get_db()
+    with app.open_resource('data/handle_old_schema.sql', mode='r') as f:
+        db.cursor().executescript(f.read())
+    db.commit()
+
+def handle_old_schema():
+    result = check_table_tag_exists()
+    if(result is None):
+        create_tag_table()
+        init_tag()
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
