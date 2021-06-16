@@ -68,6 +68,13 @@ https://github.com/eyedol/tools/blob/master/anki_data_builder.py
 
 Thanks [@eyedol](https://github.com/eyedol)
 
+## Anki Flashcards:
+
+* [computer science flash cards - (basic)](https://ankiweb.net/shared/info/1782040640)
+* [computer science flash cards - (extreme)](https://ankiweb.net/shared/info/1691396127)
+
+Thanks [@JackKuo-tw](https://github.com/JackKuo-tw)
+
 ## How to run it on a server
 
 1. Clone project to a directory on your web server.
