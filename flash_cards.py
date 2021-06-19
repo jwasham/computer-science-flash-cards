@@ -193,6 +193,29 @@ def memorize(card_type, card_id=None):
                            card_type=card_type,
                            short_answer=short_answer, tags=tags)
 
+@app.route('/memorize_know')
+@app.route('/memorize_know/<card_id>')
+@app.route('/memorize_know/<card_type>')
+def memorize_know(card_type, card_id=None):
+    tag = getTag(card_type)
+    if tag is None:
+        return redirect(url_for('cards'))
+
+    if card_id:
+        card = get_card_by_id(card_id)
+    else:
+        card = get_card_already_know(card_type)
+    if not card:
+        flash("You hasn't learned any '" + tag[1] + "' cards yet.")
+        return redirect(url_for('show'))
+    short_answer = (len(card['back']) < 75)
+    tags = getAllTag()
+    card_type = int(card_type)
+    return render_template('memorize_know.html',
+                           card=card,
+                           card_type=card_type,
+                           short_answer=short_answer, tags=tags)
+
 
 def get_card(type):
     db = get_db()
@@ -418,6 +441,23 @@ def handle_old_schema():
     if(result is None):
         create_tag_table()
         init_tag()
+
+def get_card_already_know(type):
+    db = get_db()
+
+    query = '''
+      SELECT
+        id, type, front, back, known
+      FROM cards
+      WHERE
+        type = ?
+        and known = 1
+      ORDER BY RANDOM()
+      LIMIT 1
+    '''
+
+    cur = db.execute(query, [type])
+    return cur.fetchone()
 
 
 if __name__ == '__main__':
