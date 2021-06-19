@@ -6,6 +6,7 @@ This fork repository has been updated with the following features:
 - Choose to load the database
 - Init database with UI
 - Bookmark card will be added to the tag "bookmark"
+- Can load old database hasn't been tagged yet
 
 *-------------------- __Origin README__ --------------------*
 
@@ -76,6 +77,13 @@ If you don't want to run a server, you can simply use Anki or a similar service/
 https://github.com/eyedol/tools/blob/master/anki_data_builder.py
 
 Thanks [@eyedol](https://github.com/eyedol)
+
+## Anki Flashcards:
+
+* [computer science flash cards - (basic)](https://ankiweb.net/shared/info/1782040640)
+* [computer science flash cards - (extreme)](https://ankiweb.net/shared/info/1691396127)
+
+Thanks [@JackKuo-tw](https://github.com/JackKuo-tw)
 
 ## How to run it on a server
 
