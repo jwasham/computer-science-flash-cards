@@ -204,9 +204,9 @@ def memorize_know(card_type, card_id=None):
     if card_id:
         card = get_card_by_id(card_id)
     else:
-        card = get_card_already_know(card_type)
+        card = get_card_already_known(card_type)
     if not card:
-        flash("You hasn't learned any '" + tag[1] + "' cards yet.")
+        flash("You haven't learned any '" + tag[1] + "' cards yet.")
         return redirect(url_for('show'))
     short_answer = (len(card['back']) < 75)
     tags = getAllTag()
@@ -442,7 +442,7 @@ def handle_old_schema():
         create_tag_table()
         init_tag()
 
-def get_card_already_know(type):
+def get_card_already_known(type):
     db = get_db()
 
     query = '''
