@@ -459,6 +459,15 @@ def get_card_already_known(type):
     cur = db.execute(query, [type])
     return cur.fetchone()
 
+@app.route('/mark_unknown/<card_id>/<card_type>')
+def mark_unknown(card_id, card_type):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('UPDATE cards SET known = 0 WHERE id = ?', [card_id])
+    db.commit()
+    flash('Card marked as unknown.')
+    return redirect(url_for('memorize_known', card_type=card_type))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
