@@ -7,7 +7,7 @@ textarea {
     font-family: monospace;
 }
 
-.cardContent h4 {
+.cardContent .tagContent h4 {
     margin-top: 0;
 }
 

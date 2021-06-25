@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="well">
+        <h2>Edit Tag #{{ tag.id }}</h2>
+        <form action="{{ url_for('update_tag') }}" method="post" class="tagForm">
+            <div class="form-group">
+                <label for="tagName">Tag name</label>
+                <input type="text" name="tagName" id="tagName" class="form-control" value="{{ tag.tagName|e }}">
+            </div>
+
+            <hr />
+            <div class="form-group">
+                <input type="hidden" name="tag_id" value="{{ tag.id|e }}" />
+                <button type="submit" class="saveButton btn btn-lg btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

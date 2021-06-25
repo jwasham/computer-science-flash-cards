@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <div class="well editPanelTag">
+        <h2>Add a Tag</h2>
+        <form action="{{ url_for('add_tag') }}" method="post" class="tagForm">
+            <div class="form-group fieldTagName">
+                <label for="tagName">Tag name</label>
+                <input type="text" name="tagName" id="tagName" class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="saveButton btn btn-lg btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="page-header">
+        <h2>{{ tags|length }} Tag{{ '' if (tags|length == 1) else 's' }}</h2>
+    </div>
+    <br />
+    <br />
+
+    <table class="table table-bordered">
+        {% for tag in tags %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('edit_tag', tag_id=tag.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                </td>
+                <td class="tagContent">
+                    <h4>
+                        {{ tag.tagName }}
+                    </h4>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td>
+                    <em>No tags to show.</em>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

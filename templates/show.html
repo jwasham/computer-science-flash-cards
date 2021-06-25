@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="page-header">
+    <h2>{{ cards|length }} Card{{ '' if (cards|length == 1) else 's' }}</h2>
+</div>
+<div class="btn-group btn-group-md" role="group" aria-label="filters">
+    <a href="{{ url_for('filter_cards', filter_name="all") }}" class="btn btn-{{ "primary" if filter_name == "all" else "default" }}">all</a>
+    {% for tag in tags %}
+        <a href="{{ url_for('filter_cards', filter_name=tag.id) }}" class="btn btn-{{ "primary" if filter_name == tag.id else "default" }}">{{tag.tagName}}</a>
+    {% endfor %}
+    <a href="{{ url_for('filter_cards', filter_name="known") }}" class="btn btn-{{ "primary" if filter_name == "known" else "default" }}">known</a>
+    <a href="{{ url_for('filter_cards', filter_name="unknown") }}" class="btn btn-{{ "primary" if filter_name == "unknown" else "default" }}">unknown</a>
+</div>
+
+<br />
+<br />
+
+<table class="table table-bordered">
+    {% for card in cards %}
+        <tr>
+            <td>
+                <a href="{{ url_for('edit', card_id=card.id) }}" class="btn btn-xs btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+            </td>
+            <td class="cardContent">
+                <h4>
+                    {{ card.front }}
+                </h4>
+                {% if card.type == 1 %}
+                    {{ card.back|replace("\n", "<br />")|safe }}
+                {% else %}
+                    <pre><code>{{ card.back|escape }}</code></pre>
+                {% endif %}
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td>
+                <em>No cards to show.</em>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
