@@ -193,10 +193,10 @@ def memorize(card_type, card_id=None):
                            card_type=card_type,
                            short_answer=short_answer, tags=tags)
 
-@app.route('/memorize_know')
-@app.route('/memorize_know/<card_id>')
-@app.route('/memorize_know/<card_type>')
-def memorize_know(card_type, card_id=None):
+@app.route('/memorize_known')
+@app.route('/memorize_known/<card_id>')
+@app.route('/memorize_known/<card_type>')
+def memorize_known(card_type, card_id=None):
     tag = getTag(card_type)
     if tag is None:
         return redirect(url_for('cards'))
@@ -211,7 +211,7 @@ def memorize_know(card_type, card_id=None):
     short_answer = (len(card['back']) < 75)
     tags = getAllTag()
     card_type = int(card_type)
-    return render_template('memorize_know.html',
+    return render_template('memorize_known.html',
                            card=card,
                            card_type=card_type,
                            short_answer=short_answer, tags=tags)
@@ -459,6 +459,15 @@ def get_card_already_known(type):
     cur = db.execute(query, [type])
     return cur.fetchone()
 
+@app.route('/mark_unknown/<card_id>/<card_type>')
+def mark_unknown(card_id, card_type):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    db = get_db()
+    db.execute('UPDATE cards SET known = 0 WHERE id = ?', [card_id])
+    db.commit()
+    flash('Card marked as unknown.')
+    return redirect(url_for('memorize_known', card_type=card_type))
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
