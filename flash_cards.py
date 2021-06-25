@@ -193,10 +193,10 @@ def memorize(card_type, card_id=None):
                            card_type=card_type,
                            short_answer=short_answer, tags=tags)
 
-@app.route('/memorize_know')
-@app.route('/memorize_know/<card_id>')
-@app.route('/memorize_know/<card_type>')
-def memorize_know(card_type, card_id=None):
+@app.route('/memorize_known')
+@app.route('/memorize_known/<card_id>')
+@app.route('/memorize_known/<card_type>')
+def memorize_known(card_type, card_id=None):
     tag = getTag(card_type)
     if tag is None:
         return redirect(url_for('cards'))
@@ -211,7 +211,7 @@ def memorize_know(card_type, card_id=None):
     short_answer = (len(card['back']) < 75)
     tags = getAllTag()
     card_type = int(card_type)
-    return render_template('memorize_know.html',
+    return render_template('memorize_known.html',
                            card=card,
                            card_type=card_type,
                            short_answer=short_answer, tags=tags)
