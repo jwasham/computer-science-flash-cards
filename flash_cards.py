@@ -427,7 +427,6 @@ def check_table_tag_exists():
     db = get_db()
     cur = db.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='tags'")
     result = cur.fetchone()
-    print("Table tag : ",result)
     return result
 
 def create_tag_table():
