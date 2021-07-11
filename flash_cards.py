@@ -171,8 +171,8 @@ def delete(card_id):
     return redirect(url_for('cards'))
 
 @app.route('/memorize')
-@app.route('/memorize/<card_id>')
 @app.route('/memorize/<card_type>')
+@app.route('/memorize/<card_type>/<card_id>')
 def memorize(card_type, card_id=None):
     tag = getTag(card_type)
     if tag is None:
@@ -194,8 +194,8 @@ def memorize(card_type, card_id=None):
                            short_answer=short_answer, tags=tags)
 
 @app.route('/memorize_known')
-@app.route('/memorize_known/<card_id>')
 @app.route('/memorize_known/<card_type>')
+@app.route('/memorize_known/<card_type>/<card_id>')
 def memorize_known(card_type, card_id=None):
     tag = getTag(card_type)
     if tag is None:
