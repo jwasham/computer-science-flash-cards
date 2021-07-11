@@ -52,7 +52,6 @@ $(document).ready(function(){
             }
         }
 
-        console.log("Click");
         $('.toggleButton').click(checkit);
 
         checkit();
