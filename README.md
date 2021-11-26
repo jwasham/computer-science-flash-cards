@@ -107,11 +107,9 @@ Thanks [@JackKuo-tw](https://github.com/JackKuo-tw)
    1. Run `python get-pip.py` in terminal
    1. Add pip to your PATH system variable [windows](https://stackoverflow.com/questions/23708898/pip-is-not-recognized-as-an-internal-or-external-command)
    1. Run `pip install -r requirements.txt` in terminal after going to correct folder
-1. Open flash_cards.py and uncomment the line 52-55 beginning from `@app.route('/initdb')`
 1. Type `python flash_cards.py` - if you get error for flask then use `python -m pip install Flask` first then run `flash_card.py` file
-1. Open localhost:5000/initdb
-1. Login using id:USERNAME='admin', PASSWORD='default'.
-1. Comment the line 52-55 in flash_cards.py
+1. Open localhost:5000/
+1. Login using 'admin' and 'default' for the username and password, respectively.
 
 **NOTE:** If you wish to use John's flash cards then also do following steps:
 
