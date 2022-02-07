@@ -114,7 +114,7 @@ Thanks [@JackKuo-tw](https://github.com/JackKuo-tw)
 **NOTE:** If you wish to use John's flash cards then also do following steps:
 
 1. Copy db files such as `cards-jwasham-extreme` OR `cards-jwasham` and paste them in db folder
-1. Edit file `flash_cards.py` line 8 and replace cards with any of the other database files
+1. Edit file `flash_cards.py` line 8 and replace 'cards.db' with any of the other database files e.g.('cards-jwasham.db') 
 1. Repeat the above steps from step 3
 
 Every time you wish to run your db just open folder in terminal and run  `python flash_cards.py`
