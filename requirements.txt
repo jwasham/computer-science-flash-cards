@@ -23,4 +23,4 @@ requests==2.20.0
 scour==0.32
 six==1.10.0
 virtualenv==15.1.0
-Werkzeug==0.15.5
+Werkzeug==2.2.3
