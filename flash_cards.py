@@ -217,6 +217,41 @@ def memorize_known(card_type, card_id=None):
                            short_answer=short_answer, tags=tags)
 
 
+@app.route('/previous_card/<card_type>/<card_id>')
+def previous_card(card_type, card_id=None):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    
+    # Get the previous card (lesser ID) for the given type
+    db = get_db()
+    
+    query = '''
+      SELECT
+        id, type, front, back, known
+      FROM cards
+      WHERE
+        type = ? AND id < ?
+      ORDER BY id DESC
+      LIMIT 1
+    '''
+    
+    cur = db.execute(query, [card_type, card_id])
+    previous_card = cur.fetchone()
+
+    # If no previous card, redirect to the current card or show a message
+    if not previous_card:
+        flash("This is the first card.")
+        return redirect(url_for('memorize_known', card_type=card_type, card_id=card_id))
+
+    short_answer = (len(previous_card['back']) < 75)
+    tags = getAllTag()
+    
+    return render_template('memorize_known.html',
+                           card=previous_card,
+                           card_type=card_type,
+                           short_answer=short_answer, tags=tags)
+
+
 def get_card(type):
     db = get_db()
 
