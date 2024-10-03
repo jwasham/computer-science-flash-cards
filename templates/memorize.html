@@ -82,9 +82,15 @@
             </a>
             &nbsp;
             &nbsp;
+            <a href="{{ url_for('previous_card', card_type=card_type, card_id=card.id) }}" class="btn btn-primary btn-lg">
+                <i class="fa fa-arrow-left"></i> 
+                Previous Card
+            </a>
+            &nbsp;
+            &nbsp;
             <a href="{{ url_for('memorize', card_type=card_type) }}" class="btn btn-primary btn-lg">
-                Next Card
                 <i class="fa fa-arrow-right"></i>
+                Next Card
             </a>
         </div>
     </div>
