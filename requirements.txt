@@ -22,5 +22,5 @@ pyxdg==0.26
 requests==2.32.0
 scour==0.32
 six==1.10.0
-virtualenv==15.1.0
+virtualenv==20.26.6
 Werkzeug==3.0.3
